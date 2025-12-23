@@ -295,14 +295,17 @@
        /* --- 프리뷰 캔버스 공통 스타일 (크기 제외) --- */
         /* 🟢 [분리] 모든 캔버스가 공유하는 스타일만 남깁니다. */
         #preview-canvas, #preview-canvas-edit { 
-            margin: 10px auto;/* 중앙 정렬을 위해 auto로 설정 */
-            max-height: 55dvh;       /* 화면 높이의 55%까지만 허용 */
-            width: auto;
+        margin: 10px auto; 
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-            background-color: white; /* 캔버스 배경색 */
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            background-color: transparent; /* 흰색 여백 방지를 위해 투명 설정 */
             display: block; 
             object-fit: contain; 
+    
+            /* 🔴 중요: 화면 높이에 맞춰 크기 자동 조절 */
+            width: auto;
+            max-width: 90%;
+            max-height: 50dvh; /* 화면 높이의 50%를 넘지 않게 설정 */
         }
         
         /* 마지막 페이지 프리뷰 하단 여백 */
@@ -403,7 +406,7 @@
         #frame-options-list {
             background: #333; 
             width: 95%;
-            margin: 150px auto 0 auto;
+            margin: 15px auto 0 auto;
             overflow-x: auto; 
             white-space: nowrap; 
             padding: 10px 10px;
@@ -1349,26 +1352,26 @@
             });
         }
 
-       async function drawComposite(canvasId) {
+        async function drawComposite(canvasId) {
             const canvas = document.getElementById(canvasId);
             const ctx = canvas.getContext('2d');
-            
-            // 🟢 [수정] 새로운 최종 캔버스 해상도 적용
-            const width = 3000; 
-            const height = 4440;
-            canvas.width = width;
-            canvas.height = height;
+    
+            // 1. 캔버스 해상도 고정 (프레임 비율에 맞춤)
+            canvas.width = 3000; 
+            canvas.height = 4440;
 
-            // 🟢 [수정] 사진 크기: 45mm x 60mm -> 1350px x 1800px
+            // 2. 🔴 배경을 흰색이 아닌 투명하게 초기화 (흰색 여백 방지)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
             const photoWidth = 1350; 
             const photoHeight = 1800; 
 
-            // 🟢 [수정] 새로운 위치 좌표 (30px/mm 스케일 적용)
+            // 3. 🔴 사진이 프레임 구멍에 딱 맞도록 좌표 수정 (y값을 조정하여 위치 맞춤)
             const positions = [
-                {x: 120, y: 600},   // 1번: 4mm / 20mm -> 120 / 600
-                {x: 1560, y: 600},  // 2번: 52mm / 20mm -> 1560 / 600
-                {x: 120, y: 2520},  // 3번: 4mm / 84mm -> 120 / 2520
-                {x: 1560, y: 2520}  // 4번: 52mm / 84mm -> 1560 / 2520
+                {x: 110, y: 550},   // 1번 사진 (기존 600에서 상향 조정)
+                {x: 1540, y: 550},  // 2번 사진
+                {x: 110, y: 2470},  // 3번 사진 (기존 2500에서 상향 조정)
+                {x: 1540, y: 2470}  // 4번 사진
             ];
             
             const loadingPromises = selectedIndices.map(index => loadPhoto(photos[index]));
