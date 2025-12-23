@@ -55,17 +55,23 @@
         
         /* --- 공통 컨테이너 --- */
         #main-content-container {
-        width: 100%;       /* 90%에서 100%로 확장 */
-        max-width: 600px;  /* 아이패드에서도 너무 커지지 않게 제한 */
+        width: 100%;
+        max-width: 600px; /* 아이패드 세로형에 적합한 폭 */
+        height: 100vh;    /* 전체 화면 높이 사용 */
         margin: 0 auto;
-        padding: 0;        /* 패딩 제거 */
-        height: 100vh;     /* 화면 높이 전체 사용 */
+        padding: 0;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* 세로 중앙 정렬 */
-        align-items: center;     /* 가로 중앙 정렬 */
-        background: transparent;  /* 배경을 투명하게 */
-        }   
+        justify-content: center; /* 콘텐츠를 화면 정중앙에 배치 */
+        align-items: center;
+        position: relative;
+        overflow: hidden; /* 내부 요소가 튀어나가지 않게 함 */
+        }
+
+        /* 1. 강제 비율 생성기 제거 (회색 사각형 및 잘림의 주원인) */
+        #main-content-container::before {
+        display: none !important;
+        }
 
         /* 4. 내부 레이아웃 시작점 조정 */
         #main-content-container > div {
