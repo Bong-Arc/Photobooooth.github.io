@@ -602,37 +602,34 @@
 
     
     <div id="step-start" class="step active">
-        <h1 id="app-title">인생네컷</h1> 
-
-        <div class="start-buttons-container" style="display: flex; flex-direction: column; align-items: center; width: 100%; gap: 15px;">
+        <div class="start-buttons-container" style="display: flex; flex-direction: column; align-items: center; width: 100%; gap: 15px; margin-top: auto; margin-bottom: 50px;">
         
-            <button id="admin-toggle-btn" onclick="toggleAdminMode()" style="background: #444; font-size: 14px; padding: 10px 20px; min-width: 150px; opacity: 0.8;">
+            <button id="admin-toggle-btn" onclick="toggleAdminMode()" style="background: #444; font-size: 14px; padding: 10px 20px; min-width: 150px; opacity: 0.8; border-radius: 20px; border: 1px solid #666;">
                 ⚙️ 관리자 설정
             </button>
 
-            <div id="admin-panel" style="display: none; width: 90%; max-width: 400px; padding: 20px; border: 2px dashed #00d2d3; border-radius: 15px; background: #2a2a2a; margin-bottom: 10px;">
-                <h3 style="font-size: 16px; color: #00d2d3; margin-top: 0;">🖼️ 프레임 관리</h3>
-                <p style="font-size: 12px; color: #aaa; margin-bottom: 15px;">새로운 PNG 프레임을 등록하세요.</p>
+            <div id="admin-panel" style="display: none; width: 95%; max-width: 500px; padding: 20px; border: 2px dashed #00d2d3; border-radius: 15px; background: #2a2a2a; margin-bottom: 10px; box-sizing: border-box;">
+                <h3 style="font-size: 16px; color: #00d2d3; margin-top: 0; margin-bottom: 15px;">🖼️ 프레임 관리 모드</h3>
             
-                <div id="upload-container">
-                    <label for="frame-upload" style="background: #555; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block;">
-                        파일 선택 (+)
+                <div id="upload-container" style="margin-bottom: 20px;">
+                    <label for="frame-upload" style="background: #555; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block; font-size: 14px;">
+                        새 프레임 등록 (+)
                     </label>
                     <input type="file" id="frame-upload" accept="image/*" style="display: none;" onchange="handleFrameUpload(event)">
+                </div>
+
+                <div id="frame-selection-container" style="text-align: left;">
+                    <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: bold; color: #00d2d3;">등록된 프레임 목록 (선택/삭제)</p>
+                    <div id="start-frame-gallery-wrapper" style="background: #333; padding: 10px; border-radius: 10px; overflow-x: auto;">
+                        <div id="start-frame-gallery" style="display: flex; gap: 10px;">
+                            </div>
+                    </div>
                 </div>
             </div>
 
             <button id="start-shoot-btn" onclick="startCamera()" style="background: #ff6b81; padding: 20px 50px; font-size: 22px; border-radius: 40px; width: 90%; max-width: 350px;">
-                인생네컷 촬영하기
+                📸 촬영하기
             </button>
-        </div>
-
-        <div id="frame-selection-container" style="margin-top: 30px; width: 100%;">
-            <p style="margin-bottom: 10px; font-weight: bold; color: #aaa;">사용할 프레임을 선택하세요</p>
-            <div id="start-frame-gallery-wrapper">
-                <div id="start-frame-gallery">
-                    </div>
-            </div>
         </div>
     </div>
 
@@ -931,25 +928,35 @@
         function renderStartFrameGallery() {
             const galleryEl = document.getElementById('start-frame-gallery');
             if (!galleryEl) return;
-            
+    
+            // 프레임이 없을 때 메시지 표시
+            if (uploadedFrames.length === 0) {
+                galleryEl.innerHTML = '<p style="color:#888; font-size:12px; width:100%; text-align:center;">등록된 프레임이 없습니다.</p>';
+                return;
+            }
+    
             galleryEl.innerHTML = uploadedFrames.map(frame => {
                 const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
+                const isSelected = String(selectedFrameId) === String(frame.id);
+        
                 return `
-                <div class="start-frame-item ${String(selectedFrameId) === String(frame.id) ? 'selected' : ''}" 
-                     data-frame-id="${frame.id}"
-                     onclick="selectStartFrame('${frame.id}')">
+                <div class="start-frame-item ${isSelected ? 'selected' : ''}" 
+                    data-frame-id="${frame.id}"
+                    onclick="selectStartFrame('${frame.id}')">
                     <img src="${frame.dataUrl}" alt="${fileName}">
-                    <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">X</button>
+                    <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">✕</button>
                     <div class="frame-name">${fileName}</div>
                 </div>
                 `;
             }).join('');
-            
+    
+            // 촬영하기 버튼 상태 업데이트
             const startShootBtn = document.getElementById('start-shoot-btn');
             if (startShootBtn) {
-                // 선택된 프레임이 있어야 촬영 버튼 활성화
-                startShootBtn.disabled = !selectedFrameId;
-                startShootBtn.style.backgroundColor = selectedFrameId ? '#ff6b81' : '#666666';
+                const hasSelected = !!selectedFrameId;
+                startShootBtn.disabled = !hasSelected;
+                startShootBtn.style.backgroundColor = hasSelected ? '#ff6b81' : '#666666';
+                startShootBtn.style.cursor = hasSelected ? 'pointer' : 'not-allowed';
             }
         }
         
