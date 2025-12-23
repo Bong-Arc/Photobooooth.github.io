@@ -428,26 +428,27 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; /* 상단부터 버튼 배치 */
+            justify-content: flex-end; /* 모든 요소를 하단으로 밀착 */
             height: 100vh;
-            padding-top: 80px; /* 제목과의 간격 */
+            padding-bottom: 50px; /* 하단 버튼군과 화면 끝 사이의 여백 */
             box-sizing: border-box;
             position: relative;
             width: 100%;
         }
 
-        /* 관리자 패널 박스 */
+        /* 🟢 관리자 패널 (버튼 바로 위에 위치하도록 마진 조정) */
         #admin-panel {
-            display: none; /* JS로 토글 */
+            display: none; 
             width: 90%;
             max-width: 600px;
-            background: rgba(51, 51, 51, 0.9);
+            background: rgba(40, 40, 40, 0.95); /* 조금 더 진한 배경으로 가독성 확보 */
             padding: 20px;
             border-radius: 15px;
-            border: 1px dashed #00d2d3;
-            margin-top: 20px;
+            border: 1px dashed #ff6b81;
+            margin-bottom: 20px; /* 관리자 버튼과의 간격 */
             z-index: 10;
             box-sizing: border-box;
+            box-shadow: 0 -10px 25px rgba(0,0,0,0.5); /* 위로 그림자 효과 */
         }
 
         /* 🟢 프레임 목록 가로 스크롤 영역 */
@@ -683,23 +684,17 @@
         <div id="admin-panel">
             <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
             <div id="start-frame-gallery-wrapper">
-                <div id="start-frame-gallery">
-                    </div>
+                <div id="start-frame-gallery"></div>
                 <label for="frame-upload" class="frame-add-btn">
                     <span>+</span> 프레임 추가
                 </label>
                 <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
             </div>
-            <p style="font-size: 11px; color: #aaa; margin-top: 10px;">* 프레임이 많으면 가로로 밀어서 확인하세요.</p>
         </div>
 
         <div class="start-buttons-container">
-            <button id="admin-toggle-btn" onclick="toggleAdminMode()">
-                ⚙️ 관리자 모드
-            </button>
-            <button id="start-shoot-btn" disabled>
-                📸 촬영하기
-            </button>
+            <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
+            <button id="start-shoot-btn" disabled>📸 촬영하기</button>
         </div>
     </div>
     
