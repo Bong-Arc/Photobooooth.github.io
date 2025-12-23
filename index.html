@@ -601,20 +601,25 @@
     <h1 id="app-title">인생네컷</h1> 
 
     
-    <div id="step-start" style="display: flex;">
-        <div id="start-frame-gallery-wrapper">
-            <div id="start-frame-gallery">
-                </div>
-            <label for="frame-upload" class="frame-add-btn">
-                <span>+</span> 프레임 추가
-            </label>
-            <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+    <div id="step-start" class="step active">
+        <div onclick="toggleAdminMode()" style="margin-bottom: 15px; font-size: 13px; color: #666; cursor: pointer; text-decoration: underline;">
+            Admin Mode
         </div>
-        
-        <div class="start-buttons-container">
-            <button id="start-shoot-btn" disabled>
-                <span style="font-size: 1.2em; margin-right: 5px;">📸</span> 촬영하기
-            </button>
+
+        <button id="start-btn" onclick="startCamera()">인생네컷 촬영하기</button>
+    
+        <div id="admin-panel" style="display: none; margin-top: 20px; padding: 15px; border: 1px dashed #444; border-radius: 10px; background: #2a2a2a;">
+            <h3 style="font-size: 14px; color: #00d2d3; margin-top: 0;">프레임 업로드 (관리자)</h3>
+            <div id="upload-container">
+                <label for="frame-upload" id="upload-label">새 프레임 등록 (+)</label>
+                <input type="file" id="frame-upload" accept="image/*" onchange="handleFrameUpload(event)">
+            </div>
+        </div>
+
+        <div id="frame-selection-container">
+            <p style="margin: 15px 0 10px 0; font-weight: bold; color: #aaa;">사용할 프레임을 선택하세요</p>
+            <div id="frame-list">
+                </div>
         </div>
     </div>
 
@@ -760,6 +765,18 @@
             } 
             // 취소하면 현재 페이지에 남아있게 됩니다.
         }
+
+        // 관리자 패널 토글 함수 (비밀번호 없음)
+        function toggleAdminMode() {
+            const adminPanel = document.getElementById('admin-panel');
+            if (adminPanel.style.display === 'none') {
+                adminPanel.style.display = 'block';
+            } else {
+                adminPanel.style.display = 'none';
+            }
+        }
+
+// [참고] 기존 handleFrameUpload 함수는 그대로 두시면 됩니다.
 
         // 🟢 [추가] 카메라 단계에서 홈으로 돌아가는 함수
         function stopCameraAndGoHome() {
