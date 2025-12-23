@@ -766,15 +766,30 @@
             // 취소하면 현재 페이지에 남아있게 됩니다.
         }
 
-        // 관리자 패널 토글 함수 (비밀번호 없음)
+        // 1. 관리자 모드 토글 함수
         function toggleAdminMode() {
             const adminPanel = document.getElementById('admin-panel');
-            if (adminPanel.style.display === 'none') {
-                adminPanel.style.display = 'block';
-            } else {
-                adminPanel.style.display = 'none';
+            if (adminPanel) {
+                if (adminPanel.style.display === 'none') {
+                    adminPanel.style.display = 'block';
+                } else {
+                    adminPanel.style.display = 'none';
+                }
             }
         }
+
+        // 2. 페이지 로드 시 로더를 확실히 숨기는 코드 확인
+            window.onload = () => {
+            // 기존에 있던 로직들...
+            const loader = document.getElementById('app-loader');
+            if (loader) {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.display = 'none';
+                }, 500);
+            }
+            renderFrameList();
+        };
 
 // [참고] 기존 handleFrameUpload 함수는 그대로 두시면 됩니다.
 
