@@ -564,7 +564,7 @@
             flex-shrink: 0;
             box-sizing: border-box;
         }
-        
+
         .start-frame-item .frame-name {
             position: absolute;
             bottom: 0;
@@ -680,31 +680,28 @@
 
     
 <div id="step-start">
-    <button id="admin-toggle-btn" onclick="toggleAdminMode()" style="background: #444; font-size: 14px; padding: 10px 20px; border-radius: 20px; opacity: 0.8;">
-        ⚙️ 관리자 모드
-    </button>
-
-    <div id="admin-panel">
-        <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
-        <div id="start-frame-gallery-wrapper">
-            <div id="start-frame-gallery" style="display: flex; gap: 15px;">
-                </div>
-            
-            <label for="frame-upload" class="frame-add-btn" style="min-width: 80px;">
-                <span>+</span> 프레임 추가
-            </label>
-            <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+        <div id="admin-panel">
+            <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
+            <div id="start-frame-gallery-wrapper">
+                <div id="start-frame-gallery">
+                    </div>
+                <label for="frame-upload" class="frame-add-btn">
+                    <span>+</span> 프레임 추가
+                </label>
+                <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+            </div>
+            <p style="font-size: 11px; color: #aaa; margin-top: 10px;">* 프레임이 많으면 가로로 밀어서 확인하세요.</p>
         </div>
-        <p style="font-size: 11px; color: #aaa; margin-top: 10px;">* 프레임이 많으면 가로로 밀어서 확인하세요.</p>
-    </div>
 
-    <div class="start-buttons-container">
-        <button id="start-shoot-btn" disabled style="width: 100%; padding: 5px; font-size: 22px; border-radius: 40px;">
-            📸 촬영하기
-        </button>
+        <div class="start-buttons-container">
+            <button id="admin-toggle-btn" onclick="toggleAdminMode()">
+                ⚙️ 관리자 모드
+            </button>
+            <button id="start-shoot-btn" disabled>
+                📸 촬영하기
+            </button>
+        </div>
     </div>
-</div>
-
     
     <div id="video-container">
         <button class="action-button-base home-button-camera" onclick="stopCameraAndGoHome()">
@@ -849,20 +846,20 @@
         }
 
         // 관리자 모드 토글 함수
-function toggleAdminMode() {
-    const adminPanel = document.getElementById('admin-panel');
-    const toggleBtn = document.getElementById('admin-toggle-btn');
-    
-    if (adminPanel.style.display === 'none' || adminPanel.style.display === '') {
-        adminPanel.style.display = 'block';
-        toggleBtn.innerHTML = '❌ 관리자 모드 닫기';
-        toggleBtn.style.background = '#ff4757';
-    } else {
-        adminPanel.style.display = 'none';
-        toggleBtn.innerHTML = '⚙️ 관리자 모드';
-        toggleBtn.style.background = '#444';
-    }
-}
+        function toggleAdminMode() {
+            const adminPanel = document.getElementById('admin-panel');
+            const toggleBtn = document.getElementById('admin-toggle-btn');
+            
+            if (adminPanel.style.display === 'none' || adminPanel.style.display === '') {
+                adminPanel.style.display = 'block';
+                toggleBtn.innerHTML = '❌ 관리자 모드 닫기';
+                toggleBtn.style.background = '#ff4757';
+            } else {
+                adminPanel.style.display = 'none';
+                toggleBtn.innerHTML = '⚙️ 관리자 모드';
+                toggleBtn.style.background = '#444';
+            }
+        }
 
         // 🟢 [추가] 카메라 단계에서 홈으로 돌아가는 함수
         function stopCameraAndGoHome() {
