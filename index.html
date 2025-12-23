@@ -10,9 +10,13 @@
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
         /* 🟢 [추가] 브라우저 메인 스크롤바 완전히 제거 */
         html, body {
-            height: 100vh; /* 뷰포트 높이 전체를 차지하도록 강제 */
-            overflow: hidden; /* 전체 페이지 스크롤 비활성화 (핵심) */
-            box-sizing: border-box; /* 높이 계산에 패딩 포함 */
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+        /* iOS 상단 상태바 최소 여백만 남김 */
+        padding-top: env(safe-area-inset-top); 
+        background-color: #222;
         }
         
         body {
@@ -34,18 +38,7 @@
         
         /* --- 프로그램 제목 기본 스타일 --- */
         h1#app-title {
-            color: #ff6b81;
-            transition: opacity 0.2s;
-            position: fixed; 
-            top: 15px;               /* 30px -> 15px로 줄임 */
-            left: 50%;               
-            transform: translateX(-50%); 
-            z-index: 200;           
-            margin: 0;               
-            padding: 5px 20px;      
-            border-radius: 10px;
-            cursor: default; 
-            font-size: 24px;         /* 30px -> 24px로 줄임 */
+        display: none !important;
         }
         h1#app-title.clickable { cursor: pointer; } 
         h1#app-title:hover { opacity: 0.8; }
@@ -62,25 +55,21 @@
         
         /* --- 공통 컨테이너 --- */
         #main-content-container {
-        width: 90%;
+        width: 95%; /* 좌우 여백을 조금 더 확보 */
         max-width: 1000px; 
-        /* 상단 패딩을 60px -> 40px로 줄여 위로 밀착시킴 */
-        padding: 40px 30px 20px 30px; 
-    
+        padding: 10px 0; /* 상단 60px -> 10px로 대폭 축소 */
+        margin-top: 0;
         max-height: 100vh; 
-        overflow-y: auto; 
-        box-sizing: border-box; 
-        position: relative; /* 자식 요소 배치를 위해 추가 권장 */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         }
 
         /* 4. 내부 레이아웃 시작점 조정 */
         #main-content-container > div {
-        position: absolute;
-        top: 60px; /* 100px -> 60px: 제목 바로 아래에서 시작하도록 */
-        left: 0;
+        position: relative; /* absolute에서 relative로 변경하여 유연하게 배치 */
+        top: 0 !important;   /* 위쪽 여백 제거 */
         width: 100%;
-        height: calc(100% - 60px); 
-        overflow: auto; 
         }
 
         /* 🟢 [추가] 단계 제목(예: '프레임 선택')의 상단 마진 제거 */
@@ -1075,7 +1064,7 @@
                 shotCountEl.innerText = `${currentShot} / 6`;
 
                // 카운트다운 (타이머)
-               for (let c = 7; c > 0; c--) {
+               for (let c = 1; c > 0; c--) {
             timerEl.innerText = c;
                    await new Promise(r => setTimeout(r, 1000));
                }
