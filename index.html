@@ -55,21 +55,24 @@
         
         /* --- 공통 컨테이너 --- */
         #main-content-container {
-        width: 95%; /* 좌우 여백을 조금 더 확보 */
-        max-width: 1000px; 
-        padding: 10px 0; /* 상단 60px -> 10px로 대폭 축소 */
-        margin-top: 0;
-        max-height: 100vh; 
+        width: 100%;       /* 90%에서 100%로 확장 */
+        max-width: 600px;  /* 아이패드에서도 너무 커지지 않게 제한 */
+        margin: 0 auto;
+        padding: 0;        /* 패딩 제거 */
+        height: 100vh;     /* 화면 높이 전체 사용 */
         display: flex;
         flex-direction: column;
-        align-items: center;
-        }
+        justify-content: center; /* 세로 중앙 정렬 */
+        align-items: center;     /* 가로 중앙 정렬 */
+        background: transparent;  /* 배경을 투명하게 */
+        }   
 
         /* 4. 내부 레이아웃 시작점 조정 */
         #main-content-container > div {
-        position: relative; /* absolute에서 relative로 변경하여 유연하게 배치 */
-        top: 0 !important;   /* 위쪽 여백 제거 */
-        width: 100%;
+        position: relative;
+        width: 90%;        /* 실질적인 콘텐츠 폭 */
+        top: 0 !important;
+        margin: 0 auto;
         }
 
         /* 🟢 [추가] 단계 제목(예: '프레임 선택')의 상단 마진 제거 */
