@@ -69,10 +69,15 @@
         #main-content-container {
             width: 90%;
             max-width: 1000px; /* 태블릿 환경 고려 */
-            padding: 60px 30px 20px 30px; 
+            padding: 20px 10px;      /* 상단 여백 축소 */
+            flex: 1;                 /* 남은 공간 차지 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 중앙 정렬 */
+            overflow: hidden;
             
             /* 스크롤 관련 유지 */
-            max-height: 100vh; 
+            max-height: 100dvh; 
             overflow-y: auto; 
             box-sizing: border-box; 
         }
@@ -250,8 +255,11 @@
             display: flex;
             justify-content: center;
             gap: 20px;
-            margin-top: 15px;
+            margin-bottom: env(safe-area-inset-bottom, 20px); /* 아이패드 하단 바 여백 확보 */
+            padding-bottom: 20px;    /* 버튼을 바닥에서 위로 밀어올림 */
+            z-index: 100;
         }
+
 
         /* 🟢 [추가] 공유 버튼을 감싸는 컨테이너 스타일 */
         .save-button-wrapper {
@@ -286,7 +294,9 @@
        /* --- 프리뷰 캔버스 공통 스타일 (크기 제외) --- */
         /* 🟢 [분리] 모든 캔버스가 공유하는 스타일만 남깁니다. */
         #preview-canvas, #preview-canvas-edit { 
-            margin: 20px auto 10px auto; /* 중앙 정렬을 위해 auto로 설정 */
+            margin: 10px auto;/* 중앙 정렬을 위해 auto로 설정 */
+            max-height: 55dvh;       /* 화면 높이의 55%까지만 허용 */
+            width: auto;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             background-color: white; /* 캔버스 배경색 */
@@ -317,8 +327,9 @@
 
         /* 3. 🟢 [완성 페이지] 프리뷰 크기  */
         #final-canvas, #final-image-for-save {
-            width: 480px; 
-            height: 710px; 
+            max-height: 55dvh;       /* 화면 높이의 55%까지만 허용 */
+            width: auto;
+            margin: 10px auto;
         }
         #preview-canvas-edit { margin-top: 0; }
         
