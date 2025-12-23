@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>나만의 인생네컷 부스</title>
+    <meta name="robots" content="noindex, nofollow">
+    
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
         /* 🟢 [추가] 브라우저 메인 스크롤바 완전히 제거 */
         html, body {
-            height: 100vh; /* 뷰포트 높이 전체를 차지하도록 강제 */
+            height: 100dvh; /* 뷰포트 높이 전체를 차지하도록 강제 */
             overflow: hidden; /* 전체 페이지 스크롤 비활성화 (핵심) */
             box-sizing: border-box; /* 높이 계산에 패딩 포함 */
         }
@@ -23,12 +25,15 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            /* min-height를 100vh로 고정 */
-            height: 100vh; 
-            min-height: 100vh;
-            box-sizing: border-box;
+                /* 🔴 수정된 핵심 부분 */
+            height: 100dvh;          /* 사파리 툴바를 제외한 실제 화면 높이 */
             width: 100%;
-        }
+           overflow: hidden;        /* 스크롤 절대 방지 */
+            position: fixed;         /* 화면을 고정시켜 당겨도 안 움직이게 함 */
+            justify-content: flex-start; /* 위에서부터 차례로 배치 */
+            padding-top: 10px;       /* 상단 여백 살짝 추가 */
+            box-sizing: border-box;
+        }     
         
         /* --- 프로그램 제목 기본 스타일 --- */
         h1#app-title {
