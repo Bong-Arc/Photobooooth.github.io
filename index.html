@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>나만의 인생네컷 부스</title>
     <meta name="robots" content="noindex, nofollow">
-    
+
     <style>
         @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
         /* 🟢 [추가] 브라우저 메인 스크롤바 완전히 제거 */
@@ -142,10 +142,9 @@
             z-index: 100;
         }
 
-        /*카메라 촬영시작 버튼*/
         #controls {
             width: 100%;
-            bottom: 15%; 
+            bottom: 5%; 
             
             display: flex; 
             flex-direction: column; 
@@ -158,7 +157,6 @@
             z-index: 100;
         }
         
-        /*촬영시작 위의 문구*/
         #controls .msg { 
             color: white;
             font-weight: bold;
@@ -301,20 +299,20 @@
         }
         /* 1. 🟢 [사진 선택 단계] 프리뷰 크기 */
         #preview-canvas { 
-            width: 380px; 
-            height: 562px; /* 380 * 1.48 비율 */
+            width: 400px; 
+            height: 592px; /* 380 * 1.48 비율 */
         }
 
         /* 2. 🟢 [프레임 선택 단계] 프리뷰 크기  */
         #preview-canvas-edit {
-            width: 450px; 
-            height: 666px; 
+            width: 480px; 
+            height: 710px; 
         }
 
         /* 3. 🟢 [완성 페이지] 프리뷰 크기  */
         #final-canvas, #final-image-for-save {
-            width: 450px; 
-            height: 666px; 
+            width: 480px; 
+            height: 710px; 
         }
         #preview-canvas-edit { margin-top: 0; }
         
@@ -601,34 +599,19 @@
     <h1 id="app-title">인생네컷</h1> 
 
     
-    <div id="step-start" class="step active">
-        <div class="start-buttons-container" style="display: flex; flex-direction: column; align-items: center; width: 100%; gap: 15px; margin-top: auto; margin-bottom: 50px;">
+    <div id="step-start" style="display: flex;">
+        <div id="start-frame-gallery-wrapper">
+            <div id="start-frame-gallery">
+                </div>
+            <label for="frame-upload" class="frame-add-btn">
+                <span>+</span> 프레임 추가
+            </label>
+            <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+        </div>
         
-            <button id="admin-toggle-btn" onclick="toggleAdminMode()" style="background: #444; font-size: 14px; padding: 10px 20px; min-width: 150px; opacity: 0.8; border-radius: 20px; border: 1px solid #666;">
-                ⚙️ 관리자 설정
-            </button>
-
-            <div id="admin-panel" style="display: none; width: 95%; max-width: 800px; padding: 20px; border: 2px dashed #00d2d3; border-radius: 15px; background: #2a2a2a; margin-bottom: 10px; box-sizing: border-box;">
-                <h3 style="font-size: 16px; color: #00d2d3; margin-top: 0; margin-bottom: 15px;">🖼️ 프레임 관리 모드</h3>
-            
-                <div id="upload-container" style="margin-bottom: 20px;">
-                    <label for="frame-upload" style="background: #555; padding: 10px 20px; border-radius: 5px; cursor: pointer; display: inline-block; font-size: 14px;">
-                        새 프레임 등록 (+)
-                    </label>
-                    <input type="file" id="frame-upload" accept="image/*" style="display: none;" onchange="handleFrameUpload(event)">
-                </div>
-
-                <div id="frame-selection-container" style="text-align: left;">
-                    <p style="margin: 0 0 10px 0; font-size: 13px; font-weight: bold; color: #00d2d3;">등록된 프레임 목록 (선택/삭제)</p>
-                    <div id="start-frame-gallery-wrapper" style="background: #333; padding: 10px; border-radius: 10px; overflow-x: auto;">
-                        <div id="start-frame-gallery" style="display: flex; gap: 10px;">
-                            </div>
-                    </div>
-                </div>
-            </div>
-
-            <button id="start-shoot-btn" onclick="startCamera()" style="background: #ff6b81; padding: 20px 50px; font-size: 22px; border-radius: 40px; width: 90%; max-width: 350px;">
-                📸 촬영하기
+        <div class="start-buttons-container">
+            <button id="start-shoot-btn" disabled>
+                <span style="font-size: 1.2em; margin-right: 5px;">📸</span> 촬영하기
             </button>
         </div>
     </div>
@@ -776,22 +759,6 @@
             // 취소하면 현재 페이지에 남아있게 됩니다.
         }
 
-        // 관리자 모드 //
-        function toggleAdminMode() {
-            const adminPanel = document.getElementById('admin-panel');
-            const toggleBtn = document.getElementById('admin-toggle-btn');
-    
-            if (adminPanel.style.display === 'none') {
-                adminPanel.style.display = 'block';
-                toggleBtn.innerText = '❌ 설정 닫기';
-                toggleBtn.style.background = '#6c757d'; // 닫기 상태일 때 색상 변경
-            } else {
-                adminPanel.style.display = 'none';
-                toggleBtn.innerText = '⚙️ 관리자 설정';
-                toggleBtn.style.background = '#444';
-            }
-        }
-
         // 🟢 [추가] 카메라 단계에서 홈으로 돌아가는 함수
         function stopCameraAndGoHome() {
             if (videoStream) {
@@ -928,35 +895,25 @@
         function renderStartFrameGallery() {
             const galleryEl = document.getElementById('start-frame-gallery');
             if (!galleryEl) return;
-    
-            // 프레임이 없을 때 메시지 표시
-            if (uploadedFrames.length === 0) {
-                galleryEl.innerHTML = '<p style="color:#888; font-size:12px; width:100%; text-align:center;">등록된 프레임이 없습니다.</p>';
-                return;
-            }
-    
+            
             galleryEl.innerHTML = uploadedFrames.map(frame => {
                 const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
-                const isSelected = String(selectedFrameId) === String(frame.id);
-        
                 return `
-                <div class="start-frame-item ${isSelected ? 'selected' : ''}" 
-                    data-frame-id="${frame.id}"
-                    onclick="selectStartFrame('${frame.id}')">
+                <div class="start-frame-item ${String(selectedFrameId) === String(frame.id) ? 'selected' : ''}" 
+                     data-frame-id="${frame.id}"
+                     onclick="selectStartFrame('${frame.id}')">
                     <img src="${frame.dataUrl}" alt="${fileName}">
-                    <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">✕</button>
+                    <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">X</button>
                     <div class="frame-name">${fileName}</div>
                 </div>
                 `;
             }).join('');
-    
-            // 촬영하기 버튼 상태 업데이트
+            
             const startShootBtn = document.getElementById('start-shoot-btn');
             if (startShootBtn) {
-                const hasSelected = !!selectedFrameId;
-                startShootBtn.disabled = !hasSelected;
-                startShootBtn.style.backgroundColor = hasSelected ? '#ff6b81' : '#666666';
-                startShootBtn.style.cursor = hasSelected ? 'pointer' : 'not-allowed';
+                // 선택된 프레임이 있어야 촬영 버튼 활성화
+                startShootBtn.disabled = !selectedFrameId;
+                startShootBtn.style.backgroundColor = selectedFrameId ? '#ff6b81' : '#666666';
             }
         }
         
@@ -1039,40 +996,47 @@
                 return;
             }
 
+            // 카메라 화면 활성화
             document.getElementById('step-start').style.display = 'none';
             document.getElementById('main-content-container').style.display = 'none'; 
             document.getElementById('video-container').style.display = 'block';
-    
+            
+            // 컨트롤/메시지 표시
             document.getElementById('controls').style.display = 'flex';
             document.getElementById('shoot-btn').style.display = 'block';
             document.getElementById('shoot-msg').style.display = 'block';
+
+            // 촬영 시작 시 제목 숨기기
             document.getElementById('app-title').style.display = 'none';
 
+            // 카메라 사용 권한 요청 및 스트림 설정
             try {
-                // [수정] ideal 해상도는 높게 잡되, 기기가 지원하지 않을 경우 브라우저가 최적의 값을 찾도록 설정
+                // 🔴 [수정] 고화질 스트림을 요청하는 제약 조건 추가 (Full HD급)
                 const constraints = { 
                     video: {
+                        // 최소 해상도 요청 (iPad/아이폰에서 안정적인 Full HD급: 1920x1440 비율)
                         width: { ideal: 1920 },
-                        height: { ideal: 1440 },
-                        facingMode: "user" // 전면 카메라 우선
+                        height: { ideal: 1440 }
                     }, 
                     audio: false 
                 };
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoStream = stream;
                 video.srcObject = stream;
-        
+                
+                // 비디오 준비 완료 시 재생
                 video.onloadedmetadata = () => {
                     video.play();
                 };
 
+                // 촬영 버튼에 시퀀스 연결
                 document.getElementById('shoot-btn').onclick = startShootingSequence;
-        
+                
             } catch (err) {
                 console.error("카메라 접근 오류: ", err);
-                // [추가] 오류 메시지 구체화
-                alert("카메라를 시작할 수 없습니다. 권한 허용 여부나 다른 앱에서의 사용 여부를 확인해주세요.");
-        
+                alert("카메라 접근 권한이 필요합니다! (" + err + ")");
+                
+                // 오류 시 원상 복구
                 document.getElementById('video-container').style.display = 'none';
                 document.getElementById('step-start').style.display = 'flex';
                 document.getElementById('app-title').style.display = 'block';
@@ -1099,7 +1063,7 @@
                 shotCountEl.innerText = `${currentShot} / 6`;
 
                // 카운트다운 (타이머)
-               for (let c = 1; c > 0; c--) {
+               for (let c = 7; c > 0; c--) {
             timerEl.innerText = c;
                    await new Promise(r => setTimeout(r, 1000));
                }
@@ -1153,6 +1117,7 @@
 
         // --- 3-2단계: 한 컷 촬영 함수 (고화질 크롭 로직 적용) ---
         function capturePhoto() {
+            // 1. 임시 캔버스 생성 및 비디오 해상도 설정 (원본 프레임 캡처용)
             const tempCanvas = document.createElement('canvas');
             const tempCtx = tempCanvas.getContext('2d');
             const videoWidth = video.videoWidth;
@@ -1161,50 +1126,59 @@
             tempCanvas.width = videoWidth;
             tempCanvas.height = videoHeight;
 
+            // 좌우 반전
             tempCtx.translate(videoWidth, 0);
             tempCtx.scale(-1, 1);
             tempCtx.drawImage(video, 0, 0, videoWidth, videoHeight);
 
-            const targetWidth = 1350; 
-            const targetHeight = 1800; 
-            const targetRatio = targetWidth / targetHeight;
+           // --- 🟢 [핵심 수정] 최종 합성 시 확대가 일어나지 않도록 해상도 상향 조정 ---
 
-            const finalPhotoCanvas = document.createElement('canvas');
-            const finalPhotoCtx = finalPhotoCanvas.getContext('2d');
-            finalPhotoCanvas.width = targetWidth;
-            finalPhotoCanvas.height = targetHeight;
+           // 2. 최종 네컷의 한 컷 목표 크기: 1350px X 1800px (3:4 비율)
+           //    -> 최종 합성 캔버스에서 한 컷의 크기(1350x1800)와 동일하게 설정하여 확대 방지
+           const targetWidth = 1350; // ⬅️ 수정: 450 -> 1350
+            const targetHeight = 1800; // ⬅️ 수정: 600 -> 1800
+            const targetRatio = targetWidth / targetHeight; // 0.75
 
-            const sourceRatio = videoWidth / videoHeight;
-            let sourceX, sourceY, sourceWidth, sourceHeight;
+         // 3. 최종 출력용 캔버스 생성 및 크기 설정
+          const finalPhotoCanvas = document.createElement('canvas');
+          const finalPhotoCtx = finalPhotoCanvas.getContext('2d');
+          finalPhotoCanvas.width = targetWidth;
+          finalPhotoCanvas.height = targetHeight;
 
-            if (sourceRatio > targetRatio) {
-                sourceHeight = videoHeight;
-                sourceWidth = videoHeight * targetRatio; 
-                sourceX = (videoWidth - sourceWidth) / 2;
-                sourceY = 0;
-            } else {
-                sourceWidth = videoWidth;
-                sourceHeight = videoWidth / targetRatio; 
-                sourceX = 0;
-                sourceY = (videoHeight - sourceHeight) / 2;
-            }
+          // 4. 캔버스의 목표 비율(3:4)에 맞추기 위해 원본 이미지에서 잘라낼 영역 계산
+          const sourceRatio = videoWidth / videoHeight;
 
-            finalPhotoCtx.drawImage(
-                tempCanvas, 
-                sourceX, sourceY, sourceWidth, sourceHeight, 
-                0, 0, targetWidth, targetHeight  
-            );
+          let sourceX, sourceY, sourceWidth, sourceHeight;
 
-            // [핵심 수정] image/png 대신 image/jpeg 사용 및 퀄리티 설정 (메모리 절약)
-            // 0.9 정도면 인쇄 시에도 품질 저하를 느끼기 어렵습니다.
-            photos.push(finalPhotoCanvas.toDataURL('image/jpeg', 0.9)); 
-    
-            // 메모리 해제 지원: 사용 후 캔버스 초기화
-            tempCanvas.width = 0;
-            tempCanvas.height = 0;
-            finalPhotoCanvas.width = 0;
-            finalPhotoCanvas.height = 0;
-        }             
+          if (sourceRatio > targetRatio) {
+          // 원본이 목표보다 가로가 긴 경우 (세로를 기준으로 맞추고 가로를 크롭)
+              sourceHeight = videoHeight;
+               sourceWidth = videoHeight * targetRatio; 
+               sourceX = (videoWidth - sourceWidth) / 2; // 가로 중앙
+               sourceY = 0;
+           } else {
+              // 원본이 목표보다 세로가 긴 경우 (가로를 기준으로 맞추고 세로를 크롭)
+              sourceWidth = videoWidth;
+              sourceHeight = videoWidth / targetRatio; 
+              sourceX = 0;
+              sourceY = (videoHeight - sourceHeight) / 2; // 세로 중앙
+          }
+
+           // 5. 원본(tempCanvas)에서 계산된 영역을 잘라내어 최종 캔버스(finalPhotoCanvas)에 축소하여 그리기
+           finalPhotoCtx.drawImage(
+               tempCanvas, 
+               sourceX,    
+               sourceY,    
+               sourceWidth,  
+               sourceHeight, 
+               0, 0,       
+               targetWidth,  
+               targetHeight  
+           );
+
+           // 6. 최종적으로 크롭 및 캡처된 고화질 dataURL 저장 (PNG 무손실 압축으로 변경)
+            photos.push(finalPhotoCanvas.toDataURL('image/png')); // ⬅️ 수정: 'image/jpeg', 0.95 -> 'image/png'
+        }              
 
         // [추가] 첫 번째 사진의 딜레이를 줄이기 위한 사전 준비 함수
         function preWarmCapture() {
