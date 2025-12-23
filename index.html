@@ -37,36 +37,33 @@
             color: #ff6b81;
             transition: opacity 0.2s;
             position: fixed; 
-            top: 30px;               
+            top: 10px;               
             left: 50%;               
             transform: translateX(-50%); 
             z-index: 200;           
             margin: 0;               
-            padding: 5px 20px;      
+            padding: 0;      
             border-radius: 10px;
             cursor: default; 
-            font-size: 30px; 
+            font-size: 20px; 
         }
         h1#app-title.clickable { cursor: pointer; } 
         h1#app-title:hover { opacity: 0.8; }
         
         /* 🟢 [수정] 제목 뒤 카메라 아이콘 위치 조정 */
         h1#app-title::after {
-            content: '📸'; 
-            position: absolute;
-            top: -10px; 
-            left: auto;
-            transform: none;
-            font-size: 20px; 
-            color: white;
-            z-index: 201;
+        content: '📸'; 
+        position: absolute;
+        top: -2px; 
+        right: -25px;           /* 제목 옆으로 배치하여 세로 공간 절약 */
+        font-size: 14px; 
         }
         
         /* --- 공통 컨테이너 --- */
         #main-content-container {
-            width: 90%;
+            width: 95%;
             max-width: 1000px; /* 태블릿 환경 고려 */
-            padding: 60px 30px 20px 30px; 
+            padding: 30px 10px 10px 10px; 
             
             /* 스크롤 관련 유지 */
             max-height: 100vh; 
