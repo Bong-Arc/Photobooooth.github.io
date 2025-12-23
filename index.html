@@ -436,38 +436,7 @@
             justify-content: flex-end; /* 컨텐츠를 아래로 밀어냄 */
             margin-top: 0;
         }
-        #start-frame-gallery-wrapper {
-            width: 95%;
-            max-width: 500px;
-            padding: 15px;
-            background: #444; /* 배경색 조정 */
-            border-radius: 15px;
-            margin-top: auto; 
-            margin-bottom: 20px;
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            gap: 15px;
-            align-items: center;
-            justify-content: flex-start;
-        }
-        #start-frame-gallery {
-            display: inline-flex;
-            gap: 15px;
-            padding: 0 5px; 
-        }
-        .start-frame-item {
-            position: relative;
-            width: 80px; 
-            height: 120px; 
-            flex-shrink: 0; 
-            border: 3px solid transparent; 
-            border-radius: 5px;
-            overflow: hidden;
-            box-sizing: border-box;
-            background-color: white; 
-            cursor: pointer;
-        }
+
         .start-frame-item img {
             width: 100%;
             height: 100%;
@@ -477,36 +446,7 @@
         .start-frame-item.selected {
             border-color: #00d2d3; 
         }
-        .start-frame-item .remove-btn {
-            position: absolute;
-            top: -5px; right: -5px; 
-            background: #ff4757;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 20px; height: 20px;
-            font-size: 14px;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 10;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-        }
-        .start-frame-item .frame-name {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            color: white;
-            font-size: 0.6em;
-            padding: 2px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+
         /* --- 프레임 추가 버튼 스타일 수정 부분 --- */
         .frame-add-btn {
             background: none; /* 배경을 none으로 변경 (요청하신 이미지의 테두리만 있는 디자인) */
@@ -566,6 +506,124 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* 1. 관리자 패널 전체 박스 (점선 박스) */
+#admin-panel {
+    display: none; 
+    width: 100%; 
+    max-width: 800px; 
+    padding: 20px 0; 
+    border: 2px dashed #00d2d3; 
+    border-radius: 15px; 
+    background: #2a2a2a; 
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+/* 2. 가로 스크롤을 감싸는 영역 */
+#frame-selection-container {
+    width: 100%;
+    overflow: hidden; /* 영역 밖으로 나가는 것 방지 */
+}
+
+/* 3. 실제 스크롤이 일어나는 통로 */
+#start-frame-gallery-wrapper {
+    width: 100%;
+    overflow-x: auto; /* 가로 스크롤 활성화 */
+    padding: 10px 20px;
+    box-sizing: border-box;
+    display: block;
+    -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
+}
+
+/* 4. 프레임들과 추가버튼이 나란히 정렬되는 곳 */
+#start-frame-gallery {
+    display: flex;
+    gap: 15px; /* 아이템 사이 간격 */
+    align-items: center;
+    width: max-content; /* 내용물만큼 가로로 길어지게 함 */
+}
+
+/* 5. 프레임 아이템 & 추가하기 버튼 공통 크기 (1:1.48 비율) */
+.start-frame-item, .frame-add-item-btn {
+    width: 110px;      
+    height: 163px;     
+    flex-shrink: 0;    /* 크기 고정 */
+    border-radius: 10px;
+    box-sizing: border-box;
+    position: relative;
+    transition: all 0.2s;
+}
+
+/* 6. 개별 프레임 아이템 스타일 */
+.start-frame-item {
+    border: 3px solid transparent;
+    overflow: hidden;
+    background: #fff;
+    cursor: pointer;
+}
+
+.start-frame-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.start-frame-item.selected {
+    border-color: #00d2d3;
+    transform: scale(1.05); /* 선택 시 살짝 커짐 */
+    z-index: 2;
+}
+
+/* 7. 추가하기 버튼 (+) 디자인 */
+.frame-add-item-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed #666;
+    background: #333;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.frame-add-item-btn:hover {
+    border-color: #00d2d3;
+    color: #00d2d3;
+    background: #3a3a3a;
+}
+
+.frame-add-item-btn span { font-size: 35px; font-weight: bold; }
+.frame-add-item-btn p { margin: 5px 0 0 0; font-size: 12px; }
+
+/* 8. 삭제 버튼 (X) */
+.remove-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 71, 87, 0.9);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 9. 가로 스크롤바 디자인 */
+#start-frame-gallery-wrapper::-webkit-scrollbar {
+    height: 6px;
+}
+#start-frame-gallery-wrapper::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 10px;
+}
         
     </style>
 </head>
@@ -608,26 +666,25 @@
                 ⚙️ 관리자 설정
             </button>
 
-        <div id="admin-panel" style="display: none; width: 95%; max-width: 600px; padding: 20px; border: 2px dashed #00d2d3; border-radius: 15px; background: #2a2a2a; margin-bottom: 15px; box-sizing: border-box;">
-            <h3 style="font-size: 16px; color: #00d2d3; margin-top: 0; margin-bottom: 15px;">🖼️ 프레임 관리 모드</h3>
+        <div id="admin-panel" style="display: none; width: 100%; max-width: 800px; padding: 20px 0; border: 2px dashed #00d2d3; border-radius: 15px; background: #2a2a2a; margin-bottom: 20px;">
+            <h3 style="font-size: 16px; color: #00d2d3; margin-top: 0; margin-bottom: 15px; padding-left: 20px;">🖼️ 프레임 관리 모드</h3>
     
-            <div id="upload-container" style="margin-bottom: 25px;">
-                <label for="frame-upload" style="background: #555; padding: 12px 24px; border-radius: 8px; cursor: pointer; display: inline-block; font-size: 14px; font-weight: bold; border: 1px solid #777;">
-                    새 프레임 등록 (+)
-                </label>
-                <input type="file" id="frame-upload" accept="image/*" style="display: none;" onchange="handleFrameUpload(event)">
-            </div>
-
-            <div id="frame-selection-container" style="text-align: left; width: 100%;">
-                <p style="margin: 0 0 10px 5px; font-size: 13px; font-weight: bold; color: #00d2d3;">등록된 프레임 목록 (선택/삭제)</p>
-                <div id="start-frame-gallery-wrapper" style="background: #1a1a1a; padding: 15px; border-radius: 12px; width: 100%; box-sizing: border-box; overflow-x: auto; border: 1px solid #333;">
-                    <div id="start-frame-gallery" style="display: flex; gap: 15px;">
-                        </div>
+            <div id="frame-selection-container" style="width: 100%; overflow: hidden;">
+                <p style="margin: 0 0 10px 20px; font-size: 13px; font-weight: bold; color: #00d2d3;">등록된 프레임 목록 (선택/삭제)</p>
+        
+                <div id="start-frame-gallery-wrapper" style="width: 100%; overflow-x: auto; padding: 10px 20px; box-sizing: border-box; -webkit-overflow-scrolling: touch;">
+                    <div id="start-frame-gallery" style="display: flex; gap: 15px; align-items: center;">
+                        <label for="frame-upload" class="frame-add-item-btn">
+                            <span>+</span>
+                            <p>추가하기</p>
+                        </label>
+                        <input type="file" id="frame-upload" accept="image/*" style="display: none;" onchange="handleFrameUpload(event)">
+                    </div>
                 </div>
             </div>
         </div>
 
-            <button id="start-shoot-btn" onclick="startCamera()" style="background: #ff6b81; padding: 20px 50px; font-size: 22px; border-radius: 40px; width: 90%; max-width: 350px;">
+            <button id="start-shoot-btn" onclick="startCamera()" style="background: #ff6b81; padding: 20px 50px; font-size: 22px; margin-bottom: 20px; border-radius: 40px; width: 90%; max-width: 350px;">
                 📸 촬영하기
             </button>
         </div>
@@ -929,34 +986,32 @@
             const galleryEl = document.getElementById('start-frame-gallery');
             if (!galleryEl) return;
     
-            // 프레임이 없을 때 메시지 표시
-            if (uploadedFrames.length === 0) {
-                galleryEl.innerHTML = '<p style="color:#888; font-size:12px; width:100%; text-align:center;">등록된 프레임이 없습니다.</p>';
-                return;
-            }
-    
-            galleryEl.innerHTML = uploadedFrames.map(frame => {
-                const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
+            // 프레임 아이템들 생성
+            const frameHtml = uploadedFrames.map(frame => {
                 const isSelected = String(selectedFrameId) === String(frame.id);
-        
                 return `
                 <div class="start-frame-item ${isSelected ? 'selected' : ''}" 
-                    data-frame-id="${frame.id}"
                     onclick="selectStartFrame('${frame.id}')">
-                    <img src="${frame.dataUrl}" alt="${fileName}">
+                    <img src="${frame.dataUrl}" style="width:100%; height:100%; object-fit:cover;">
                     <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">✕</button>
-                    <div class="frame-name">${fileName}</div>
                 </div>
                 `;
             }).join('');
-    
-            // 촬영하기 버튼 상태 업데이트
+
+            // 중요: 기존 갤러리에 프레임 목록 + 추가하기 버튼(label)을 함께 넣어줌
+            // (이미 HTML에 label을 써두었다면 innerHTML 대신 앞에 insertAdjacentHTML을 쓰는 방식도 있습니다.)
+            galleryEl.innerHTML = frameHtml + `
+                <label for="frame-upload" class="frame-add-item-btn">
+                    <span>+</span>
+                    <p>추가하기</p>
+                </label>
+            `;
+
+            // 촬영 버튼 활성화 로직
             const startShootBtn = document.getElementById('start-shoot-btn');
             if (startShootBtn) {
-                const hasSelected = !!selectedFrameId;
-                startShootBtn.disabled = !hasSelected;
-                startShootBtn.style.backgroundColor = hasSelected ? '#ff6b81' : '#666666';
-                startShootBtn.style.cursor = hasSelected ? 'pointer' : 'not-allowed';
+                startShootBtn.disabled = !selectedFrameId;
+                startShootBtn.style.backgroundColor = selectedFrameId ? '#ff6b81' : '#666666';
             }
         }
         
