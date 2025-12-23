@@ -37,7 +37,7 @@
             color: #ff6b81;
             transition: opacity 0.2s;
             position: fixed; 
-            top: 30px;               
+            top: 15px;               /* 30px -> 15px로 줄임 */
             left: 50%;               
             transform: translateX(-50%); 
             z-index: 200;           
@@ -45,33 +45,42 @@
             padding: 5px 20px;      
             border-radius: 10px;
             cursor: default; 
-            font-size: 30px; 
+            font-size: 24px;         /* 30px -> 24px로 줄임 */
         }
         h1#app-title.clickable { cursor: pointer; } 
         h1#app-title:hover { opacity: 0.8; }
         
         /* 🟢 [수정] 제목 뒤 카메라 아이콘 위치 조정 */
         h1#app-title::after {
-            content: '📸'; 
-            position: absolute;
-            top: -10px; 
-            left: auto;
-            transform: none;
-            font-size: 20px; 
-            color: white;
-            z-index: 201;
+        content: '📸'; 
+        position: absolute;
+        top: -5px;               /* -10px -> -5px */
+        font-size: 16px;         /* 20px -> 16px */
+        color: white;
+        z-index: 201;
         }
         
         /* --- 공통 컨테이너 --- */
         #main-content-container {
-            width: 90%;
-            max-width: 1000px; /* 태블릿 환경 고려 */
-            padding: 60px 30px 20px 30px; 
-            
-            /* 스크롤 관련 유지 */
-            max-height: 100vh; 
-            overflow-y: auto; 
-            box-sizing: border-box; 
+        width: 90%;
+        max-width: 1000px; 
+        /* 상단 패딩을 60px -> 40px로 줄여 위로 밀착시킴 */
+        padding: 40px 30px 20px 30px; 
+    
+        max-height: 100vh; 
+        overflow-y: auto; 
+        box-sizing: border-box; 
+        position: relative; /* 자식 요소 배치를 위해 추가 권장 */
+        }
+
+        /* 4. 내부 레이아웃 시작점 조정 */
+        #main-content-container > div {
+        position: absolute;
+        top: 60px; /* 100px -> 60px: 제목 바로 아래에서 시작하도록 */
+        left: 0;
+        width: 100%;
+        height: calc(100% - 60px); 
+        overflow: auto; 
         }
 
         /* 🟢 [추가] 단계 제목(예: '프레임 선택')의 상단 마진 제거 */
@@ -830,32 +839,27 @@
             setHomeButtonActive(true); 
         }
 
-        // 5단계 완성 화면으로 이동 (최종 합성 이미지 생성 및 표시)
+        // 5단계 결과 화면으로 이동 (최종 합성 이미지 생성 및 표시)
         async function createComposite() {
-            // 1. UI 전환: 편집 화면을 숨기고 결과 컨테이너를 표시합니다.
-            document.getElementById('step-edit').style.display = 'none';
-            document.getElementById('result-container').style.display = 'block';
+           document.getElementById('step-edit').style.display = 'none';
+           document.getElementById('result-container').style.display = 'block';
 
-            const canvas = document.getElementById('final-canvas');
-    
-            // 2. drawComposite 함수를 호출하여 캔버스에 사진과 프레임을 합성합니다.
-            // 이때 photos 배열에 담긴 고품질 JPEG 소스들을 사용합니다.
-            await drawComposite('final-canvas'); 
+          const canvas = document.getElementById('final-canvas');
+          await drawComposite('final-canvas'); 
 
-            // 3. [최적화 포인트] 최종 결과물은 무손실 PNG로 생성하여 최고의 화질을 유지합니다.
-            finalImageDataURL = canvas.toDataURL('image/png'); 
+          // Data URL만 생성합니다.
+          finalImageDataURL = canvas.toDataURL('image/png'); 
 
-            // 4. 캔버스는 숨기고 <img> 태그에 데이터를 할당하여 사용자가 '꾹 눌러 저장'할 수 있게 합니다.
-            const imgEl = document.getElementById('final-image-for-save');
-            imgEl.src = finalImageDataURL; 
-            imgEl.style.display = 'block'; 
-            canvas.style.display = 'none'; 
+           // 1. 캔버스 숨기고 <img> 태그에 이미지 데이터 할당 (꾹 눌러 저장 활성화)
+           const imgEl = document.getElementById('final-image-for-save');
+           imgEl.src = finalImageDataURL; 
+           imgEl.style.display = 'block'; 
+          canvas.style.display = 'none'; // 캔버스 숨김
 
-            // 5. 공유/전송 버튼을 활성화합니다.
-            document.getElementById('save-and-stay-btn').style.display = 'block'; 
+          // 🟢 [수정] QR 코드 관련 코드를 삭제하고, '공유/전송하기' 버튼을 바로 표시합니다.
+          document.getElementById('save-and-stay-btn').style.display = 'block'; 
 
-            // 6. 홈 버튼(제목 클릭) 기능을 다시 활성화합니다.
-            setHomeButtonActive(true); 
+          setHomeButtonActive(true); 
         }
         
 
@@ -1184,10 +1188,9 @@
                targetHeight  
            );
 
-        // 6. 최종적으로 크롭 및 캡처된 고화질 dataURL 저장
-        // PNG 대신 고품질 JPEG(0.92)를 사용하여 메모리 효율을 극대화합니다.
-            photos.push(finalPhotoCanvas.toDataURL('image/jpeg', 0.92));
-        }             
+           // 6. 최종적으로 크롭 및 캡처된 고화질 dataURL 저장 (PNG 무손실 압축으로 변경)
+            photos.push(finalPhotoCanvas.toDataURL('image/png')); // ⬅️ 수정: 'image/jpeg', 0.95 -> 'image/png'
+        }              
 
         // [추가] 첫 번째 사진의 딜레이를 줄이기 위한 사전 준비 함수
         function preWarmCapture() {
