@@ -928,44 +928,45 @@
             }
         }
         
-        function renderStartFrameGallery() {
-            const galleryEl = document.getElementById('start-frame-gallery');
-            if (!galleryEl) return;
+ function renderStartFrameGallery() {
+    const galleryEl = document.getElementById('start-frame-gallery');
+    if (!galleryEl) return; // 요소가 없으면 중단하여 에러 방지
 
-            // 1. 기존 프레임들을 HTML 문자열로 생성
-            let galleryHTML = uploadedFrames.map(frame => {
-                const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
-                const isSelected = String(selectedFrameId) === String(frame.id);
+    // 1. 기존 프레임들을 HTML 문자열로 생성
+    let galleryHTML = uploadedFrames.map(frame => {
+        const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
+        const isSelected = String(selectedFrameId) === String(frame.id);
 
-                return `
-                <div class="start-frame-item ${isSelected ? 'selected' : ''}" 
-                    data-frame-id="${frame.id}"
-                    onclick="selectStartFrame('${frame.id}')">
-                    <img src="${frame.dataUrl}" alt="${fileName}">
-                    <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">✕</button>
-                    <div class="frame-name">${fileName}</div>
-                </div>
-                `;
-            }).join('');
+        return `
+        <div class="start-frame-item ${isSelected ? 'selected' : ''}" 
+            data-frame-id="${frame.id}"
+            onclick="selectStartFrame('${frame.id}')">
+            <img src="${frame.dataUrl}" alt="${fileName}">
+            <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">✕</button>
+            <div class="frame-name">${fileName}</div>
+        </div>
+        `;
+    }).join('');
 
-            // 2. 맨 마지막에 '+ 추가하기' 카드 버튼 추가
-            galleryHTML += `
-                <div class="frame-add-btn" onclick="document.getElementById('frame-upload').click()">
-                    <span>➕</span>
-                    <div style="font-size: 11px; margin-top: 5px;">추가하기</div>
-                </div>
-            `;
+    // 2. 그려주신 이미지처럼 맨 뒤에 '+ 추가하기' 카드 버튼 추가
+    galleryHTML += `
+        <div class="frame-add-btn" onclick="document.getElementById('frame-upload').click()">
+            <span>+</span>
+            <div style="font-size: 11px; margin-top: 5px; font-weight: bold;">추가하기</div>
+        </div>
+    `;
 
-            galleryEl.innerHTML = galleryHTML;
+    galleryEl.innerHTML = galleryHTML;
 
-    /       / 촬영하기 버튼 상태 업데이트
-            const startShootBtn = document.getElementById('start-shoot-btn');
-            if (startShootBtn) {
-                const hasSelected = !!selectedFrameId;
-                startShootBtn.disabled = !hasSelected;
-                startShootBtn.style.backgroundColor = hasSelected ? '#ff6b81' : '#666666';
-            }
-        }
+    // 3. 촬영하기 버튼 상태 업데이트
+    const startShootBtn = document.getElementById('start-shoot-btn');
+    if (startShootBtn) {
+        const hasSelected = !!selectedFrameId;
+        startShootBtn.disabled = !hasSelected;
+        startShootBtn.style.backgroundColor = hasSelected ? '#ff6b81' : '#666';
+        startShootBtn.style.cursor = hasSelected ? 'pointer' : 'not-allowed';
+    }
+}
         
         // 1단계에서 프레임 선택
         function selectStartFrame(id) {
