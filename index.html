@@ -424,18 +424,6 @@
         
 
         /* --- 시작 화면 (1단계) - 2번 사진 디자인 반영 --- */
-        #step-start {
-            display: flex;
-            flex-direction: column;
-            align-items: center; 
-            min-height: 100vh; 
-            padding-top: 100px; 
-            box-sizing: border-box;
-            width: 100%; 
-            max-width: 600px; 
-            justify-content: flex-end; /* 컨텐츠를 아래로 밀어냄 */
-            margin-top: 0;
-        }
 
         .start-frame-item img {
             width: 100%;
@@ -507,96 +495,70 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* 1. 관리자 패널 전체 박스 (점선 박스) */
+/* 1. 관리자 패널 (하늘색 점선 박스) 자체를 가로로 길게 확장 */
 #admin-panel {
     display: none; 
-    width: 100%; 
-    max-width: 800px; 
-    padding: 20px 0; 
-    border: 2px dashed #00d2d3; 
-    border-radius: 15px; 
-    background: #2a2a2a; 
-    margin-bottom: 20px;
+    width: 100vw;               /* 화면 너비 전체 사용 */
+    margin-left: calc(-50vw + 50%); /* 부모 컨테이너 무시하고 중앙 정렬 */
+    margin-right: calc(-50vw + 50%);
+    padding: 25px 0; 
+    border-top: 2px dashed #00d2d3;    /* 위아래만 점선으로 처리하여 */
+    border-bottom: 2px dashed #00d2d3; /* 가로로 길어 보이는 효과 강조 */
+    background: rgba(42, 42, 42, 0.8);
     box-sizing: border-box;
+    overflow: hidden;
 }
 
-/* 2. 가로 스크롤을 감싸는 영역 */
-#frame-selection-container {
-    width: 100%;
-    overflow: hidden; /* 영역 밖으로 나가는 것 방지 */
-}
-
-/* 3. 실제 스크롤이 일어나는 통로 */
+/* 2. 프레임들이 가로로 정렬되는 통로 */
 #start-frame-gallery-wrapper {
     width: 100%;
     overflow-x: auto; /* 가로 스크롤 활성화 */
     padding: 10px 20px;
     box-sizing: border-box;
-    display: block;
-    -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
+    -webkit-overflow-scrolling: touch;
 }
 
-/* 4. 프레임들과 추가버튼이 나란히 정렬되는 곳 */
 #start-frame-gallery {
     display: flex;
-    gap: 15px; /* 아이템 사이 간격 */
+    gap: 15px; /* 프레임 사이 간격 */
     align-items: center;
-    width: max-content; /* 내용물만큼 가로로 길어지게 함 */
+    width: max-content; /* 프레임 개수만큼 가로로 길어짐 */
 }
 
-/* 5. 프레임 아이템 & 추가하기 버튼 공통 크기 (1:1.48 비율) */
+/* 3. 프레임 아이템 크기를 인생네컷 비율로 시원하게 키움 */
 .start-frame-item, .frame-add-item-btn {
-    width: 110px;      
-    height: 163px;     
+    width: 110px;      /* 가로 크기 확대 */
+    height: 163px;     /* 인생네컷 비율 1:1.48 유지 */
     flex-shrink: 0;    /* 크기 고정 */
     border-radius: 10px;
-    box-sizing: border-box;
     position: relative;
     transition: all 0.2s;
-}
-
-/* 6. 개별 프레임 아이템 스타일 */
-.start-frame-item {
-    border: 3px solid transparent;
-    overflow: hidden;
     background: #fff;
     cursor: pointer;
+    overflow: hidden;
 }
 
-.start-frame-item img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.start-frame-item.selected {
-    border-color: #00d2d3;
-    transform: scale(1.05); /* 선택 시 살짝 커짐 */
-    z-index: 2;
-}
-
-/* 7. 추가하기 버튼 (+) 디자인 */
+/* 4. [중요] '추가하기' 버튼 디자인 (노란 펜 그림 반영) */
 .frame-add-item-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     border: 2px dashed #666;
-    background: #333;
+    background: #333 !important; /* 배경 어둡게 */
     color: #aaa;
-    cursor: pointer;
-}
-
-.frame-add-item-btn:hover {
-    border-color: #00d2d3;
-    color: #00d2d3;
-    background: #3a3a3a;
 }
 
 .frame-add-item-btn span { font-size: 35px; font-weight: bold; }
 .frame-add-item-btn p { margin: 5px 0 0 0; font-size: 12px; }
 
-/* 8. 삭제 버튼 (X) */
+/* 5. 선택된 프레임 강조 */
+.start-frame-item.selected {
+    border: 4px solid #00d2d3;
+    transform: scale(1.05);
+}
+
+/* 6. 삭제 버튼 (X) */
 .remove-btn {
     position: absolute;
     top: 5px;
@@ -605,25 +567,16 @@
     color: white;
     border: none;
     border-radius: 50%;
-    width: 22px;
-    height: 22px;
-    font-size: 12px;
-    font-weight: bold;
+    width: 24px;
+    height: 24px;
+    font-size: 14px;
     cursor: pointer;
-    z-index: 10;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    z-index: 5;
 }
 
-/* 9. 가로 스크롤바 디자인 */
-#start-frame-gallery-wrapper::-webkit-scrollbar {
-    height: 6px;
-}
-#start-frame-gallery-wrapper::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 10px;
-}
+/* 가로 스크롤바 디자인 */
+#start-frame-gallery-wrapper::-webkit-scrollbar { height: 4px; }
+#start-frame-gallery-wrapper::-webkit-scrollbar-thumb { background: #555; border-radius: 10px; }
         
     </style>
 </head>
@@ -986,20 +939,18 @@
             const galleryEl = document.getElementById('start-frame-gallery');
             if (!galleryEl) return;
     
-            // 프레임 아이템들 생성
+            // 1. 등록된 프레임들을 HTML로 변환
             const frameHtml = uploadedFrames.map(frame => {
                 const isSelected = String(selectedFrameId) === String(frame.id);
                 return `
-                <div class="start-frame-item ${isSelected ? 'selected' : ''}" 
-                    onclick="selectStartFrame('${frame.id}')">
+                <div class="start-frame-item ${isSelected ? 'selected' : ''}" onclick="selectStartFrame('${frame.id}')">
                     <img src="${frame.dataUrl}" style="width:100%; height:100%; object-fit:cover;">
                     <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">✕</button>
                 </div>
                 `;
             }).join('');
 
-            // 중요: 기존 갤러리에 프레임 목록 + 추가하기 버튼(label)을 함께 넣어줌
-            // (이미 HTML에 label을 써두었다면 innerHTML 대신 앞에 insertAdjacentHTML을 쓰는 방식도 있습니다.)
+            // 2. 프레임들 뒤에 '추가하기' 버튼을 붙여서 출력 (노란 펜 그림처럼)
             galleryEl.innerHTML = frameHtml + `
                 <label for="frame-upload" class="frame-add-item-btn">
                     <span>+</span>
@@ -1007,7 +958,7 @@
                 </label>
             `;
 
-            // 촬영 버튼 활성화 로직
+            // 3. 촬영 버튼 활성화/비활성화
             const startShootBtn = document.getElementById('start-shoot-btn');
             if (startShootBtn) {
                 startShootBtn.disabled = !selectedFrameId;
