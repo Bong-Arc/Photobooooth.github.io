@@ -495,83 +495,64 @@
             100% { transform: rotate(360deg); }
         }
 
-/* 1. 관리자 패널 (하늘색 점선 박스) 자체를 가로로 길게 확장 */
+/* 1. 관리자 패널 전체: 부모의 제약을 무시하고 화면 끝까지 확장 */
 #admin-panel {
     display: none; 
-    width: 100vw;               /* 화면 너비 전체 사용 */
-    margin-left: calc(-50vw + 50%); /* 부모 컨테이너 무시하고 중앙 정렬 */
-    margin-right: calc(-50vw + 50%);
+    width: 100vw;               /* 화면 가로 전체 */
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;         /* 중앙 정렬 트릭 */
+    margin-right: -50vw;
     padding: 25px 0; 
-    border-top: 2px dashed #00d2d3;    /* 위아래만 점선으로 처리하여 */
-    border-bottom: 2px dashed #00d2d3; /* 가로로 길어 보이는 효과 강조 */
-    background: rgba(42, 42, 42, 0.8);
+    border-top: 2px dashed #00d2d3;
+    border-bottom: 2px dashed #00d2d3;
+    background: rgba(42, 42, 42, 0.9); /* 가독성을 위해 배경 불투명도 조절 */
     box-sizing: border-box;
-    overflow: hidden;
 }
 
-/* 2. 프레임들이 가로로 정렬되는 통로 */
+/* 2. 스크롤 래퍼: 내부 여백을 주어 프레임이 벽에 붙지 않게 함 */
 #start-frame-gallery-wrapper {
     width: 100%;
-    overflow-x: auto; /* 가로 스크롤 활성화 */
-    padding: 10px 20px;
+    overflow-x: auto; 
+    padding: 10px 40px; /* 좌우 여백을 충분히 주어 시원하게 배치 */
     box-sizing: border-box;
+    display: block;
     -webkit-overflow-scrolling: touch;
 }
 
+/* 3. 실제 프레임들이 담기는 곳: 줄바꿈 없이 한 줄로 나열 */
 #start-frame-gallery {
     display: flex;
-    gap: 15px; /* 프레임 사이 간격 */
+    flex-wrap: nowrap; /* 절대 줄바꿈 금지 */
+    gap: 20px;         /* 프레임 간격 */
     align-items: center;
-    width: max-content; /* 프레임 개수만큼 가로로 길어짐 */
+    width: max-content; /* 프레임 개수에 따라 무한정 길어짐 */
 }
 
-/* 3. 프레임 아이템 크기를 인생네컷 비율로 시원하게 키움 */
+/* 4. 프레임 아이템 및 추가 버튼 크기 */
 .start-frame-item, .frame-add-item-btn {
-    width: 110px;      /* 가로 크기 확대 */
-    height: 163px;     /* 인생네컷 비율 1:1.48 유지 */
+    width: 120px;      /* 크기를 좀 더 키워서 가독성 확보 */
+    height: 178px;     /* 1:1.48 비율 유지 */
     flex-shrink: 0;    /* 크기 고정 */
-    border-radius: 10px;
+    border-radius: 12px;
     position: relative;
-    transition: all 0.2s;
+    box-sizing: border-box;
     background: #fff;
     cursor: pointer;
-    overflow: hidden;
+    transition: transform 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* 4. [중요] '추가하기' 버튼 디자인 (노란 펜 그림 반영) */
+/* 추가하기 버튼 전용 스타일 */
 .frame-add-item-btn {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border: 2px dashed #666;
-    background: #333 !important; /* 배경 어둡게 */
-    color: #aaa;
-}
-
-.frame-add-item-btn span { font-size: 35px; font-weight: bold; }
-.frame-add-item-btn p { margin: 5px 0 0 0; font-size: 12px; }
-
-/* 5. 선택된 프레임 강조 */
-.start-frame-item.selected {
-    border: 4px solid #00d2d3;
-    transform: scale(1.05);
-}
-
-/* 6. 삭제 버튼 (X) */
-.remove-btn {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: rgba(255, 71, 87, 0.9);
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 24px;
-    height: 24px;
-    font-size: 14px;
-    cursor: pointer;
-    z-index: 5;
+    border: 2px dashed #00d2d3;
+    background: #333 !important;
+    color: #00d2d3;
 }
 
 /* 가로 스크롤바 디자인 */
@@ -934,31 +915,30 @@
             }
         }
         
-        // 1단계 프레임 갤러리 렌더링
         function renderStartFrameGallery() {
             const galleryEl = document.getElementById('start-frame-gallery');
             if (!galleryEl) return;
     
-            // 1. 등록된 프레임들을 HTML로 변환
-            const frameHtml = uploadedFrames.map(frame => {
+            // 1. 등록된 프레임 목록 생성
+        const frameHtml = uploadedFrames.map(frame => {
                 const isSelected = String(selectedFrameId) === String(frame.id);
                 return `
                 <div class="start-frame-item ${isSelected ? 'selected' : ''}" onclick="selectStartFrame('${frame.id}')">
-                    <img src="${frame.dataUrl}" style="width:100%; height:100%; object-fit:cover;">
+                    <img src="${frame.dataUrl}" style="width:100%; height:100%; object-fit:cover; display:block;">
                     <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">✕</button>
                 </div>
                 `;
             }).join('');
 
-            // 2. 프레임들 뒤에 '추가하기' 버튼을 붙여서 출력 (노란 펜 그림처럼)
+            // 2. '추가하기' 버튼을 항상 맨 뒤에 배치 (노란 펜 의도대로)
             galleryEl.innerHTML = frameHtml + `
                 <label for="frame-upload" class="frame-add-item-btn">
-                    <span>+</span>
-                    <p>추가하기</p>
+                    <span style="font-size:40px;">+</span>
+                    <p style="margin:5px 0 0 0; font-size:13px; font-weight:bold;">프레임 추가</p>
                 </label>
             `;
 
-            // 3. 촬영 버튼 활성화/비활성화
+            // 3. 촬영하기 버튼 상태 업데이트
             const startShootBtn = document.getElementById('start-shoot-btn');
             if (startShootBtn) {
                 startShootBtn.disabled = !selectedFrameId;
