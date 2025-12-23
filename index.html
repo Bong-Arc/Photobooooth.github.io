@@ -423,7 +423,7 @@
         }
         
 
-/* --- 시작 화면 (1단계) 완성본 --- */
+/* --- 시작 화면 (1단계) - 관리자 모드 및 하단 고정 UI 반영 --- */
         #step-start {
             display: flex;
             flex-direction: column;
@@ -431,27 +431,30 @@
             height: 100vh;
             width: 100%;
             position: relative;
-            background-color: #222; /* 배경색 유지 */
+            box-sizing: border-box;
+            /* 배경 클릭 시 관리자 모드 버튼과 겹치지 않도록 여백 확보 */
+            padding-bottom: 250px; 
+            justify-content: center; /* 로고 등을 중앙에 배치하고 싶을 때 */
         }
 
-        /* 🟢 하단 고정 컨테이너 (이 안에 모든 것을 담아 겹침 방지) */
+        /* 🟢 하단 고정 영역 (버튼 + 관리자 박스를 포함) */
         .bottom-fixed-area {
             position: absolute;
-            bottom: 40px; /* 화면 최하단 여백 */
+            bottom: 50px; /* 화면 최하단에서 띄움 */
             width: 95%;
-            max-width: 500px;
+            max-width: 600px;
             display: flex;
-            flex-direction: column; /* 세로로 순서대로 배치 */
+            flex-direction: column;
             align-items: center;
-            gap: 20px; /* 관리자 박스와 버튼들 사이의 간격 */
+            gap: 15px; /* 박스와 버튼 사이의 간격 */
             z-index: 100;
         }
 
-        /* 🟢 관리자 패널 (박스) */
+        /* 🟢 관리자 패널 (버튼 바로 위에 배치) */
         #admin-panel {
-            display: none; /* 토글 시 block */
+            display: none; 
             width: 100%;
-            background: rgba(45, 45, 45, 0.95);
+            background: rgba(40, 40, 40, 0.95);
             padding: 20px;
             border-radius: 20px;
             border: 1px dashed #ff6b81;
@@ -459,52 +462,106 @@
             box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
         }
 
-        /* 프레임 목록 가로 스크롤 영역 */
+        /* 🟢 프레임 목록 가로 스크롤 영역 */
         #start-frame-gallery-wrapper {
             display: flex;
             align-items: center;
             gap: 15px;
-            overflow-x: auto;
-            padding: 10px 5px;
+            overflow-x: auto; /* 가로 스크롤 활성화 */
+            padding: 15px 5px;
             width: 100%;
-            -webkit-overflow-scrolling: touch;
+            -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
+            scrollbar-width: thin;
         }
 
-        /* 버튼들을 감싸는 영역 */
-        .start-buttons-container {
-            width: 100%;
+        /* 스크롤바 디자인 (선택 사항) */
+        #start-frame-gallery-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        #start-frame-gallery-wrapper::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 10px;
+        }
+
+        #start-frame-gallery {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
+            gap: 15px;
         }
 
-        /* 관리자 모드 버튼 */
+        .start-frame-item {
+            position: relative;
+            width: 80px; 
+            height: 120px; 
+            flex-shrink: 0; 
+            border: 3px solid transparent; 
+            border-radius: 5px;
+            overflow: hidden;
+            box-sizing: border-box;
+            background-color: white; 
+            cursor: pointer;
+        }
+        .start-frame-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+        .start-frame-item.selected {
+            border-color: #00d2d3; 
+        }
+        .start-frame-item .remove-btn {
+            position: absolute;
+            top: -2px; right: -2px; 
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 22px; height: 22px;
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.5);
+        }
+
+        /* 🟢 하단 고정 버튼 컨테이너 */
+        .start-buttons-container {
+            position: absolute;
+            bottom: 50px; /* 화면 하단 여백 */
+            width: 90%;
+            max-width: 400px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column; /* 세로로 배치 */
+            gap: 15px; /* 버튼 사이 간격 */
+            z-index: 20;
+        }
+
+        /* 관리자 모드 버튼 (촬영하기 위쪽 배치용) */
         #admin-toggle-btn {
             background: #444;
             font-size: 14px;
-            padding: 10px 20px;
+            padding: 12px;
             border-radius: 30px;
-            color: white;
-            border: 1px solid #666;
-            cursor: pointer;
+            opacity: 0.8;
             width: fit-content;
+            align-self: center; /* 중앙 정렬 */
+            min-width: 120px;
         }
 
-        /* 촬영하기 버튼 */
         #start-shoot-btn {
             background: #ff6b81;
-            padding: 18px;
+            padding: 20px;
             font-size: 22px;
             border-radius: 40px;
             width: 100%;
             font-weight: bold;
-            color: white;
-            border: none;
-            cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        #start-shoot-btn:disabled { background: #555; cursor: not-allowed; }
         
         .frame-add-btn {
             background: none;
@@ -635,25 +692,20 @@
 
     
 <div id="step-start">
-        <div class="bottom-fixed-area">
-            
-            <div id="admin-panel">
-                <h3 style="margin: 0 0 15px 0; color: #ff6b81; font-size: 18px;">🛠️ 프레임 관리자</h3>
-                <div id="start-frame-gallery-wrapper">
-                    <div id="start-frame-gallery"></div>
-                    <label for="frame-upload" class="frame-add-btn">
-                        <span>+</span> 프레임 추가
-                    </label>
-                    <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
-                </div>
-                <p style="font-size: 11px; color: #aaa; margin-top: 10px;">옆으로 밀어서 프레임을 확인하세요.</p>
+        <div id="admin-panel">
+            <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
+            <div id="start-frame-gallery-wrapper">
+                <div id="start-frame-gallery"></div>
+                <label for="frame-upload" class="frame-add-btn">
+                    <span>+</span> 프레임 추가
+                </label>
+                <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
             </div>
+        </div>
 
-            <div class="start-buttons-container">
-                <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
-                <button id="start-shoot-btn" disabled>📸 촬영하기</button>
-            </div>
-
+        <div class="start-buttons-container">
+            <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
+            <button id="start-shoot-btn" disabled>📸 촬영하기</button>
         </div>
     </div>
     
