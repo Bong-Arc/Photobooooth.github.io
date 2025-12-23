@@ -25,10 +25,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-                /* 🔴 수정된 핵심 부분 */
+            /* 🔴 수정된 핵심 부분 */
             height: 100dvh;          /* 사파리 툴바를 제외한 실제 화면 높이 */
             width: 100%;
-           overflow: hidden;        /* 스크롤 절대 방지 */
+            overflow: hidden;        /* 스크롤 절대 방지 */
             position: fixed;         /* 화면을 고정시켜 당겨도 안 움직이게 함 */
             justify-content: flex-start; /* 위에서부터 차례로 배치 */
             padding-top: 10px;       /* 상단 여백 살짝 추가 */
@@ -40,16 +40,17 @@
             color: #ff6b81;
             transition: opacity 0.2s;
             position: fixed; 
-            top: 30px;               
+            top: 20px;               
             left: 50%;               
             transform: translateX(-50%); 
             z-index: 200;           
             margin: 0;               
-            padding: 5px 20px;      
-            border-radius: 10px;
-            cursor: default; 
-            font-size: 30px; 
+            /* 🔴 회색 영역을 결정하는 핵심 부분 */
+            padding: 2px 10px;       /* 위아래 패딩을 2px로 최소화하여 두께를 줄임 */
+            line-height: 1.1;        /* 줄 간격을 좁혀 세로폭 감소 */
+            width: auto;             /* 너비를 글자 크기에 맞춤 */
         }
+        
         h1#app-title.clickable { cursor: pointer; } 
         h1#app-title:hover { opacity: 0.8; }
         
@@ -67,7 +68,7 @@
         
         /* --- 공통 컨테이너 --- */
         #main-content-container {
-            width: 90%;
+            width: 80%;
             max-width: 1000px; /* 태블릿 환경 고려 */
             padding: 20px 10px;      /* 상단 여백 축소 */
             flex: 1;                 /* 남은 공간 차지 */
@@ -414,8 +415,8 @@
 
         .frame-option {
             display: inline-block;
-            width: 80px; 
-            height: 120px; 
+            width: 150px; 
+            height: auto;
             margin: 0 5px;
             border: 3px solid transparent;
             border-radius: 5px;
