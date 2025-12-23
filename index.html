@@ -423,24 +423,59 @@
         }
         
 
-        /* --- 시작 화면 (1단계) - 2번 사진 디자인 반영 --- */
-/* 관리자 패널 내 갤러리 래퍼 조정 */
-#start-frame-gallery-wrapper {
-    width: 100% !important; /* 관리자 패널 너비에 맞춤 */
-    background: transparent !important; /* 부모 배경 사용 */
-    margin-bottom: 0 !important;
-}
+/* --- 시작 화면 (1단계) - 관리자 모드 및 하단 고정 UI 반영 --- */
+        #step-start {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* 상단부터 버튼 배치 */
+            height: 100vh;
+            padding-top: 80px; /* 제목과의 간격 */
+            box-sizing: border-box;
+            position: relative;
+            width: 100%;
+        }
 
-#step-start {
-    justify-content: center !important; /* 중앙 정렬 유지 */
-    padding-top: 60px !important;
-}
+        /* 관리자 패널 박스 */
+        #admin-panel {
+            display: none; /* 기본적으로 숨김 */
+            width: 90%;
+            max-width: 600px;
+            background: rgba(51, 51, 51, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px dashed #ff6b81;
+            margin-top: 20px;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        /* 🟢 프레임 목록 가로 스크롤 영역 */
+        #start-frame-gallery-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            overflow-x: auto; /* 가로 스크롤 활성화 */
+            padding: 15px 5px;
+            width: 100%;
+            -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
+            scrollbar-width: thin;
+        }
+
+        /* 스크롤바 디자인 (선택 사항) */
+        #start-frame-gallery-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+        #start-frame-gallery-wrapper::-webkit-scrollbar-thumb {
+            background: #555;
+            border-radius: 10px;
+        }
 
         #start-frame-gallery {
-            display: inline-flex;
+            display: flex;
             gap: 15px;
-            padding: 0 5px; 
         }
+
         .start-frame-item {
             position: relative;
             width: 80px; 
@@ -464,14 +499,14 @@
         }
         .start-frame-item .remove-btn {
             position: absolute;
-            top: -5px; right: -5px; 
+            top: -2px; right: -2px; 
             background: #ff4757;
             color: white;
             border: none;
             border-radius: 50%;
-            width: 20px; height: 20px;
-            font-size: 14px;
-            padding: 0;
+            width: 22px; height: 22px;
+            font-size: 12px;
+            font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -492,45 +527,52 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        /* --- 프레임 추가 버튼 스타일 수정 부분 --- */
+
+        /* 프레임 추가 버튼 */
         .frame-add-btn {
-            background: none; /* 배경을 none으로 변경 (요청하신 이미지의 테두리만 있는 디자인) */
+            background: none;
             border: 2px dashed #777; 
             color: #ddd;
-            /* padding 제거 */
-            font-size: 0.9em;
+            font-size: 0.8em;
             border-radius: 5px;
             cursor: pointer;
             display: flex;
             flex-direction: column; 
             align-items: center;
             justify-content: center;
-    
-            /* 요청하신 800x1200 비율(80px x 120px)로 조정 */
             width: 80px; 
             height: 120px; 
             flex-shrink: 0;
-    
             transition: background 0.2s;
             line-height: 1.3;
+            box-sizing: border-box;
         }
         .frame-add-btn:hover { background: rgba(100, 100, 100, 0.2); }
         .frame-add-btn span { font-size: 1.5em; margin-bottom: 5px; }
 
+        /* 🟢 촬영하기 버튼 하단 고정 */
         .start-buttons-container {
+            position: absolute;
+            bottom: 50px; /* 화면 하단 여백 */
             width: 90%;
-            max-width: 300px;
-            margin-bottom: 50px; 
+            max-width: 400px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 20;
         }
+        
         #start-shoot-btn {
             background: #ff6b81; 
-            padding: 15px 40px;
-            font-size: 20px;
+            padding: 20px;
+            font-size: 22px;
             border-radius: 40px;
             width: 100%;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         #start-shoot-btn:hover { background: #ff4757; transform: scale(1.02); }
-
+        #start-shoot-btn:disabled { background: #555; transform: none; box-shadow: none; }
+        
         /* --- 5단계 완성 화면 --- */
         #result-container h2 {
             color: #00d2d3; 
@@ -586,28 +628,29 @@
     <h1 id="app-title">인생네컷</h1> 
 
     
-<div id="step-start" style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-    
-    <button id="admin-toggle-btn" onclick="toggleAdminMode()" style="background: #444; font-size: 14px; padding: 10px 20px; margin-bottom: 10px; opacity: 0.7;">
+<div id="step-start">
+    <button id="admin-toggle-btn" onclick="toggleAdminMode()" style="background: #444; font-size: 14px; padding: 10px 20px; border-radius: 20px; opacity: 0.8;">
         ⚙️ 관리자 모드
     </button>
 
-    <div class="start-buttons-container">
-        <button id="start-shoot-btn" disabled>
-            <span style="font-size: 1.2em; margin-right: 5px;">📸</span> 촬영하기
-        </button>
-    </div>
-
-    <div id="admin-panel" style="display: none; width: 95%; max-width: 500px; background: #333; padding: 20px; border-radius: 15px; margin-top: 20px; border: 1px dashed #ff6b81;">
-        <h3 style="margin-top: 0; color: #ff6b81;">프레임 관리자</h3>
+    <div id="admin-panel">
+        <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
         <div id="start-frame-gallery-wrapper">
-            <div id="start-frame-gallery"></div>
-            <label for="frame-upload" class="frame-add-btn">
+            <div id="start-frame-gallery" style="display: flex; gap: 15px;">
+                </div>
+            
+            <label for="frame-upload" class="frame-add-btn" style="min-width: 80px;">
                 <span>+</span> 프레임 추가
             </label>
             <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
         </div>
-        <p style="font-size: 12px; color: #aaa; margin-top: 10px;">* 프레임을 추가하거나 삭제한 후 '관리자 모드'를 닫으세요.</p>
+        <p style="font-size: 11px; color: #aaa; margin-top: 10px;">* 프레임이 많으면 가로로 밀어서 확인하세요.</p>
+    </div>
+
+    <div class="start-buttons-container">
+        <button id="start-shoot-btn" disabled style="width: 100%; padding: 20px; font-size: 22px; border-radius: 40px;">
+            📸 촬영하기
+        </button>
     </div>
 </div>
 
@@ -759,13 +802,13 @@ function toggleAdminMode() {
     const adminPanel = document.getElementById('admin-panel');
     const toggleBtn = document.getElementById('admin-toggle-btn');
     
-    if (adminPanel.style.display === 'none') {
+    if (adminPanel.style.display === 'none' || adminPanel.style.display === '') {
         adminPanel.style.display = 'block';
-        toggleBtn.innerText = '❌ 관리자 모드 닫기';
+        toggleBtn.innerHTML = '❌ 관리자 모드 닫기';
         toggleBtn.style.background = '#ff4757';
     } else {
         adminPanel.style.display = 'none';
-        toggleBtn.innerText = '⚙️ 관리자 모드';
+        toggleBtn.innerHTML = '⚙️ 관리자 모드';
         toggleBtn.style.background = '#444';
     }
 }
