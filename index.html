@@ -152,9 +152,10 @@
             z-index: 100;
         }
 
+        /*촬영 시작 버튼*/
         #controls {
             width: 100%;
-            bottom: 5%; 
+            bottom: 10%; 
             
             display: flex; 
             flex-direction: column; 
@@ -167,6 +168,7 @@
             z-index: 100;
         }
         
+        /*촬영 시작 버튼 위의 문구*/
         #controls .msg { 
             color: white;
             font-weight: bold;
@@ -175,7 +177,7 @@
             text-shadow: 0 0 5px rgba(0,0,0,0.8);
         }
 
-        /* 🟢 [수정] 카메라 화면의 홈 버튼 스타일 */
+        /* 🟢 [수정] 카메라 화면의 뒤로가기버튼 스타일 */
         .home-button-camera {
         /* 다음 버튼의 크기(70px x 70px)에 맞춥니다. */
             width: 70px; 
@@ -189,7 +191,9 @@
     
             /* 위치 지정 */
             position: absolute; 
-            margin-top: 50px
+            top: 35px; 
+            left: 20px; 
+            z-index: 101;
         }
 
         /* 🟢 [추가] 카메라 홈 버튼 전용 호버 효과 */
