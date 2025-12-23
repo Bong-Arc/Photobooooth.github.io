@@ -438,13 +438,13 @@
 
         /* 관리자 패널 박스 */
         #admin-panel {
-            display: none; /* 기본적으로 숨김 */
+            display: none; /* JS로 토글 */
             width: 90%;
             max-width: 600px;
             background: rgba(51, 51, 51, 0.9);
             padding: 20px;
             border-radius: 15px;
-            border: 1px dashed #ff6b81;
+            border: 1px dashed #00d2d3;
             margin-top: 20px;
             z-index: 10;
             box-sizing: border-box;
@@ -514,6 +514,57 @@
             z-index: 10;
             box-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
+
+        /* 🟢 하단 고정 버튼 컨테이너 */
+        .start-buttons-container {
+            position: absolute;
+            bottom: 50px; /* 화면 하단 여백 */
+            width: 90%;
+            max-width: 400px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column; /* 세로로 배치 */
+            gap: 15px; /* 버튼 사이 간격 */
+            z-index: 20;
+        }
+
+        /* 관리자 모드 버튼 (촬영하기 위쪽 배치용) */
+        #admin-toggle-btn {
+            background: #444;
+            font-size: 14px;
+            padding: 12px;
+            border-radius: 30px;
+            opacity: 0.8;
+            width: fit-content;
+            align-self: center; /* 중앙 정렬 */
+            min-width: 120px;
+        }
+
+        #start-shoot-btn {
+            background: #ff6b81;
+            padding: 20px;
+            font-size: 22px;
+            border-radius: 40px;
+            width: 100%;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        
+        .frame-add-btn {
+            background: none;
+            border: 2px dashed #777;
+            color: #ddd;
+            border-radius: 5px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 80px; height: 120px;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+        
         .start-frame-item .frame-name {
             position: absolute;
             bottom: 0;
@@ -553,7 +604,7 @@
         /* 🟢 촬영하기 버튼 하단 고정 */
         .start-buttons-container {
             position: absolute;
-            bottom: 50px; /* 화면 하단 여백 */
+            bottom: 15%;  /* 화면 하단 여백 */
             width: 90%;
             max-width: 400px;
             left: 50%;
@@ -648,7 +699,7 @@
     </div>
 
     <div class="start-buttons-container">
-        <button id="start-shoot-btn" disabled style="width: 100%; padding: 20px; font-size: 22px; border-radius: 40px;">
+        <button id="start-shoot-btn" disabled style="width: 100%; padding: 5px; font-size: 22px; border-radius: 40px;">
             📸 촬영하기
         </button>
     </div>
