@@ -460,13 +460,13 @@
             background: rgba(40, 40, 40, 0.95);
             padding: 20px;
             border-radius: 20px;
-            border: 1px dashed #ff6b81;
+            border: 1px dashed #00d2d3;
             box-sizing: border-box;
             box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
 
            /* 위치 설정 */
            position: absolute;
-           bottom: 105%;       /* 버튼과 약간 더 띄움 */
+           bottom: 110%;       /* 버튼과 약간 더 띄움 */
            left: 50%;          
            transform: translateX(-50%); 
            z-index: 100;
@@ -713,27 +713,27 @@
     <div id="step-start">
         <div class="start-buttons-container">
         
-<div id="admin-panel">
-    <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
-    <div id="start-frame-gallery-wrapper">
-        <div id="start-frame-gallery"></div>
-        <label for="frame-upload" class="frame-add-btn" id="add-btn-label">
-            <span>+</span> 프레임 추가
-        </label>
-        <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
-    </div>
+        <div id="admin-panel">
+            <h3 style="margin-top: 0; color: #00d2d3; font-size: 18px;">⚙️ 관리자 모드</h3>
+            <div id="start-frame-gallery-wrapper">
+                <div id="start-frame-gallery"></div>
+                <label for="frame-upload" class="frame-add-btn" id="add-btn-label">
+                    <span>+</span> 프레임 추가
+                </label>
+                <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+            </div>
 
-    <div style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px; text-align: left;">
-        <label style="color: #00d2d3; font-weight: bold; font-size: 14px;">📤 공유 메시지 설정</label>
-        <div style="display: flex; gap: 10px; margin-top: 8px;">
-            <input type="text" id="share-msg-input" 
-                   placeholder="공유 시 표시될 문구를 입력하세요." 
-                   style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #222; color: white;">
-            <button onclick="saveShareMessage()" 
-                    style="background: #00d2d3; padding: 10px 15px; font-size: 14px; min-width: 60px;">저장</button>
+                <div style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px; text-align: center;">
+                <label style="color: #00d2d3; font-weight: bold; font-size: 14px;">📤 공유 메시지 설정</label>
+                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                    <input type="text" id="share-msg-input" 
+                        placeholder="공유 시 표시될 문구를 입력하세요." 
+                        style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #222; color: white;">
+                    <button onclick="saveShareMessage()" 
+                            style="background: #00d2d3; padding: 10px 15px; font-size: 14px; min-width: 60px;">저장</button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
            <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
             <button id="start-shoot-btn" disabled>📸 촬영하기</button>
