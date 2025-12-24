@@ -440,7 +440,7 @@
         /* 🟢 하단 고정 영역 (버튼 + 관리자 박스를 포함) */
         .bottom-fixed-area {
             position: absolute;
-            bottom: 50px; /* 화면 최하단에서 띄움 */
+            bottom: 200px; /* 화면 최하단에서 띄움 */
             width: 95%;
             max-width: 600px;
             display: flex;
@@ -544,18 +544,6 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.5);
         }
 
-        /* 🟢 하단 고정 버튼 컨테이너 */
-        .start-buttons-container {
-            position: absolute;
-            bottom: 50px; /* 화면 하단 여백 */
-            width: 90%;
-            left: 50%;
-            transform: translateX(-50%);
-            display: flex;
-            flex-direction: column; /* 세로로 배치 */
-            gap: 15px; /* 버튼 사이 간격 */
-            z-index: 20;
-        }
 
         /* 관리자 모드 버튼 (촬영하기 위쪽 배치용) */
         #admin-toggle-btn {
@@ -569,16 +557,33 @@
             min-width: 120px;
         }
 
-        #start-shoot-btn {
-            background: #ff6b81; 
-            padding: 18px 50px; /* 상하 18px, 좌우 50px로 여백 조정 */
-            font-size: 22px;
-            border-radius: 40px;
-            width: auto;         /* 너비를 콘텐츠에 맞게 자동으로 설정 */
-            min-width: 200px;    /* 너무 작아지지 않도록 최소 너비 지정 */
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
+/* 하단 버튼들을 감싸는 영역을 확실하게 잡습니다 */
+.start-buttons-container {
+    position: absolute;      /* absolute 대신 fixed를 써서 화면 하단에 박습니다 */
+    bottom: 100px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    z-index: 100;           /* 다른 요소에 가려지지 않게 최상단으로 */
+    width: 100%;
+}
+
+/* 촬영하기 버튼 자체 스타일 강화 */
+#start-shoot-btn {
+    background: #ff6b81; 
+    padding: 18px 60px;
+    font-size: 22px;
+    border-radius: 40px;
+    font-weight: bold;
+    width: auto;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+    cursor: pointer;
+    border: none;
+    color: white;
+}
         
         .frame-add-btn {
             flex-shrink: 0; 
@@ -633,32 +638,6 @@
         .frame-add-btn:hover { background: rgba(100, 100, 100, 0.2); }
         .frame-add-btn span { font-size: 1.5em; margin-bottom: 5px; }
 
-        /* 🟢 촬영하기 버튼 하단 고정 */
-.start-buttons-container {
-    position: absolute;
-    bottom: 15%;  
-    width: 90%;
-    max-width: 400px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    flex-direction: column; 
-    align-items: center; /* 👈 이 속성이 버튼을 중앙으로 모아줍니다 */
-    gap: 15px; 
-    z-index: 20;
-}
-        
-        #start-shoot-btn {
-            background: #ff6b81; 
-            padding: 20px;
-            font-size: 22px;
-            border-radius: 40px;
-            width: 100%;
-            font-weight: bold;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        }
-        #start-shoot-btn:hover { background: #ff4757; transform: scale(1.02); }
-        #start-shoot-btn:disabled { background: #555; transform: none; box-shadow: none; }
         
         /* --- 5단계 완성 화면 --- */
         #result-container h2 {
@@ -715,50 +694,28 @@
     <h1 id="app-title">인생네컷</h1> 
 
     
-    <div id="step-start">
-        <div class="start-buttons-container">
-        
-<div id="admin-panel" style="display:none;"> 
-    <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
-    
-    <div id="start-frame-gallery-wrapper" style="margin-bottom: 20px;">
-        <div id="start-frame-gallery"></div>
-        <label for="frame-upload" class="frame-add-btn" id="add-btn-label">
-            <span>+</span> 프레임 추가
-        </label>
-        <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
-    </div>
+<div id="step-start">
+        <div id="admin-panel" style="display:none;"> 
+            <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
+            
+            <div id="start-frame-gallery-wrapper" style="margin-bottom: 20px;">
+                <div id="start-frame-gallery"></div>
+                <label for="frame-upload" class="frame-add-btn" id="add-btn-label">
+                    <span>+</span> 프레임 추가
+                </label>
+                <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+            </div>
 
-    <div style="text-align: left; border-top: 1px solid #444; pt: 15px; margin-top: 10px;">
-        <label style="font-size: 14px; color: #ddd; display: block; margin: 15px 0 8px 0;">공유 메시지 설정:</label>
-        <textarea id="admin-share-message" placeholder="공유 시 표시될 문구를 입력하세요" style="
-            width: 100%; 
-            height: 80px; 
-            background: #444; 
-            color: white; 
-            border: 1px solid #555; 
-            border-radius: 8px; 
-            padding: 12px; 
-            box-sizing: border-box;
-            font-family: inherit;
-            resize: none;
-            font-size: 14px;
-            line-height: 1.5;
-        "></textarea>
-    </div>
-</div>
-        
-            <label for="frame-upload" class="frame-add-btn" id="add-btn-label">
-                <span>+</span> 프레임 추가
-            </label>
-            <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+            <div style="text-align: left; border-top: 1px solid #444; pt: 15px; margin-top: 10px;">
+                <label style="font-size: 14px; color: #ddd; display: block; margin: 15px 0 8px 0;">공유 메시지 설정:</label>
+                <textarea id="admin-share-message" placeholder="공유 시 표시될 문구를 입력하세요" style="width: 100%; height: 80px; background: #444; color: white; border: 1px solid #555; border-radius: 8px; padding: 12px; box-sizing: border-box; font-family: inherit; resize: none; font-size: 14px; line-height: 1.5;"></textarea>
+            </div>
         </div>
-    </div>
 
-           <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
+        <div class="start-buttons-container">
+            <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
             <button id="start-shoot-btn" disabled>📸 촬영하기</button>
         </div>
-    </div>
     
     <div id="video-container">
         <button class="action-button-base home-button-camera" onclick="stopCameraAndGoHome()">
