@@ -59,6 +59,33 @@
         font-size: 14px; 
         }
         
+        /* 첫 화면 전용 중앙 대형 타이틀 */
+        .start-page-title {
+            font-size: 60px; /* 크기를 대폭 확대 */
+            color: #ff6b81;
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        /* 카메라 아이콘 애니메이션용 */
+.start-page-title span {
+    display: inline-block;
+    animation: bounce 2s infinite;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-10px);}
+    60% {transform: translateY(-5px);}
+}
+
         /* --- 공통 컨테이너 --- */
         #main-content-container {
             width: 95%;
@@ -460,7 +487,7 @@
             background: rgba(40, 40, 40, 0.95);
             padding: 20px;
             border-radius: 20px;
-            border: 1px dashed #00d2d3;
+            border: 1px dashed #ff6b81;
             box-sizing: border-box;
             box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
 
@@ -710,7 +737,14 @@
     <h1 id="app-title">인생네컷</h1> 
 
     
-    <div id="step-start">
+<div id="step-start">
+    <div class="start-page-title">
+        인생네컷 <span>📸</span>
+    </div>
+
+    <div class="start-buttons-container">
+        </div>
+</div>
         <div class="start-buttons-container">
         
         <div id="admin-panel">
@@ -724,8 +758,8 @@
             </div>
 
                 <div style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px; text-align: center;">
-                <label style="color: #00d2d3; font-weight: bold; font-size: 14px;">📤 공유 메시지 설정</label>
-                <div style="display: flex; gap: 10px; margin-top: 8px;">
+                <label style="color: #00d2d3; font-weight: bold; font-size: 18px;">📤 공유 메시지 설정</label>
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
                     <input type="text" id="share-msg-input" 
                         placeholder="공유 시 표시될 문구를 입력하세요." 
                         style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #222; color: white;">
