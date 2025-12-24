@@ -742,9 +742,8 @@
     <div class="start-page-title">
         인생네컷 <span>📸</span>
     </div>
-</div>
-        <div class="start-buttons-container">
-        
+
+    <div class="start-buttons-container" id="start-ui-wrapper">
         <div id="admin-panel">
             <h3 style="margin-top: 0; color: #00d2d3; font-size: 18px;">⚙️ 관리자 모드</h3>
             <div id="start-frame-gallery-wrapper">
@@ -1189,13 +1188,18 @@ function saveShareMessage() {
                 return;
             }
 
-            // 상단 타이틀 표시
-            document.getElementById('app-title').style.display = 'block'; // 🟢 [추가] 촬영 시작 시 타이틀 등장
+            // 1. 하단 버튼 및 관리자 모드 UI 전체 숨김
+    document.getElementById('start-ui-wrapper').style.display = 'none';
+    
+    // 2. 상단 작은 타이틀 표시
+    document.getElementById('app-title').style.display = 'block';
+
+    // 3. 시작 페이지 전체 숨김 및 카메라 활성화
+    document.getElementById('step-start').style.display = 'none';
+    document.getElementById('video-container').style.display = 'block';
 
             // 카메라 화면 활성화
-            document.getElementById('step-start').style.display = 'none';
             document.getElementById('main-content-container').style.display = 'none'; 
-            document.getElementById('video-container').style.display = 'block';
             
             // 컨트롤/메시지 표시
             document.getElementById('controls').style.display = 'flex';
