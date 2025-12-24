@@ -451,22 +451,27 @@
         }
 
         /* 🟢 관리자 패널 (버튼 바로 위에 배치) */
-        #admin-panel {
-            display: none; 
-            width: 90%;
-            background: rgba(40, 40, 40, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px dashed #ff6b81;
-            box-sizing: border-box;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+/* 🟢 관리자 패널 수정: 버튼 위 위치 고정 및 너비 확장 */
+#admin-panel {
+    display: none; 
+    /* 너비를 화면 대부분을 차지하도록 설정 */
+    width: 95%; 
+    max-width: 600px; /* 너무 커지는 것 방지 */
+    background: rgba(40, 40, 40, 0.95);
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px dashed #ff6b81;
+    box-sizing: border-box;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
 
-            /* --- 아래 속성을 추가/수정 하세요 --- */
-            position: absolute;
-            bottom: 100%;       /* 부모(container)의 버튼 영역 바로 위로 올림 */
-            left: 0;
-            margin-bottom: 20px; /* 버튼과의 간격 확보 */
-        }
+    /* 위치 설정 */
+    position: absolute;
+    bottom: 100%;       /* 부모 컨테이너(버튼 영역) 바로 위로 올림 */
+    left: 50%;          /* 화면 중앙 정렬 시작점 */
+    transform: translateX(-50%); /* 정확한 중앙 정렬 */
+    margin-bottom: 20px; /* 버튼과의 간격 */
+    z-index: 100;
+}
 
         /* 🟢 프레임 목록 가로 스크롤 영역 */
         #start-frame-gallery-wrapper {
