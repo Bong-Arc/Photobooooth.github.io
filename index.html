@@ -453,13 +453,19 @@
         /* 🟢 관리자 패널 (버튼 바로 위에 배치) */
         #admin-panel {
             display: none; 
-            width: 100%;
+            width: 90%;
             background: rgba(40, 40, 40, 0.95);
             padding: 20px;
             border-radius: 20px;
             border: 1px dashed #ff6b81;
             box-sizing: border-box;
             box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+
+            /* --- 아래 속성을 추가/수정 하세요 --- */
+            position: absolute;
+            bottom: 100%;       /* 부모(container)의 버튼 영역 바로 위로 올림 */
+            left: 0;
+            margin-bottom: 20px; /* 버튼과의 간격 확보 */
         }
 
         /* 🟢 프레임 목록 가로 스크롤 영역 */
@@ -692,6 +698,8 @@
 
     
 <div id="step-start">
+    <div class="start-buttons-container">
+        
         <div id="admin-panel">
             <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
             <div id="start-frame-gallery-wrapper">
@@ -703,11 +711,10 @@
             </div>
         </div>
 
-        <div class="start-buttons-container">
-            <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
-            <button id="start-shoot-btn" disabled>📸 촬영하기</button>
-        </div>
+        <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
+        <button id="start-shoot-btn" disabled>📸 촬영하기</button>
     </div>
+</div>
     
     <div id="video-container">
         <button class="action-button-base home-button-camera" onclick="stopCameraAndGoHome()">
