@@ -33,21 +33,16 @@
         }
         
         /* --- 프로그램 제목 기본 스타일 --- */
-        h1#app-title {
-            color: #ff6b81;
-            transition: opacity 0.2s;
-            position: fixed; 
-            top: 10px;               
-            left: 50%;               
-            transform: translateX(-50%); 
-            z-index: 200;           
-            margin: 0;               
-            padding: 0;      
-            border-radius: 10px;
-            cursor: default; 
-            font-size: 20px; 
-            display: none;
-        }
+h1#app-title {
+    display: none; 
+    color: #ff6b81;
+    position: fixed; 
+    top: 10px;               
+    left: 50%;               
+    transform: translateX(-50%); 
+    z-index: 200;           
+    font-size: 20px; 
+}
         h1#app-title.clickable { cursor: pointer; } 
         h1#app-title:hover { opacity: 0.8; }
         
@@ -480,17 +475,16 @@
 
         /* 🟢 관리자 패널 (버튼 바로 위에 배치) */
         /* 🟢 관리자 패널 수정: 버튼 위 위치 고정 및 너비 확장 */
-        #admin-panel {
-            display: none; 
-           /* 95%로 설정하되, 최대치를 1000px 이상으로 넉넉히 잡습니다 */
-            width: 90vw; 
-            max-width: 1000px; 
-            background: rgba(40, 40, 40, 0.95);
-            padding: 20px;
-            border-radius: 20px;
-            border: 1px dashed #ff6b81;
-            box-sizing: border-box;
-            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+#admin-panel {
+    display: none; 
+    width: 90vw; 
+    max-width: 600px; /* 너무 넓어지지 않게 조정 */
+    background: rgba(40, 40, 40, 0.95);
+    padding: 20px;
+    border-radius: 20px;
+    border: 1px dashed #ff6b81;
+    margin-bottom: 20px; /* 버튼과의 간격 */
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
 
            /* 위치 설정 */
            position: absolute;
@@ -744,6 +738,7 @@
     </div>
 
     <div class="start-buttons-container" id="start-ui-wrapper">
+        
         <div id="admin-panel">
             <h3 style="margin-top: 0; color: #00d2d3; font-size: 18px;">⚙️ 관리자 모드</h3>
             <div id="start-frame-gallery-wrapper">
@@ -754,11 +749,10 @@
                 <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
             </div>
 
-                <div style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px; text-align: center;">
+            <div style="margin-top: 20px; border-top: 1px solid #444; padding-top: 15px; text-align: center;">
                 <label style="color: #00d2d3; font-weight: bold; font-size: 18px;">📤 공유 메시지 설정</label>
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <input type="text" id="share-msg-input" 
-                        placeholder="공유 시 표시될 문구를 입력하세요." 
+                    <input type="text" id="share-msg-input" placeholder="공유 시 표시될 문구를 입력하세요." 
                         style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #555; background: #222; color: white;">
                     <button onclick="saveShareMessage()" 
                             style="background: #00d2d3; padding: 10px 15px; font-size: 14px; min-width: 60px;">저장</button>
@@ -766,10 +760,10 @@
             </div>
         </div>
 
-           <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
-            <button id="start-shoot-btn" disabled>📸 촬영하기</button>
-        </div>
+        <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
+        <button id="start-shoot-btn" disabled>📸 촬영하기</button>
     </div>
+</div>
     
     <div id="video-container">
         <button class="action-button-base home-button-camera" onclick="stopCameraAndGoHome()">
@@ -1182,66 +1176,66 @@ function saveShareMessage() {
         // ------------------------------------
 
         // --- 2단계: 카메라 촬영 로직 (가장 안정적인 코드로 복구 및 수정) ---
-        async function startCamera() {
-            if (!selectedFrameId) {
-                alert("사용할 프레임을 먼저 등록하거나 선택해주세요!");
-                return;
-            }
+// --- 2단계: 카메라 촬영 로직 ---
+async function startCamera() {
+    // 1. 프레임 선택 여부 확인
+    if (!selectedFrameId) {
+        alert("사용할 프레임을 먼저 등록하거나 선택해주세요!");
+        return;
+    }
 
-            // 1. 하단 버튼 및 관리자 모드 UI 전체 숨김
-    document.getElementById('start-ui-wrapper').style.display = 'none';
+    // 2. UI 제어: 첫 화면 요소들을 숨기고 필요한 요소만 표시
+    // 시작 페이지(로고, 관리자 패널, 촬영하기 버튼 포함) 전체를 숨김
+    document.getElementById('step-start').style.display = 'none';
     
-    // 2. 상단 작은 타이틀 표시
+    // 메인 컨텐츠 컨테이너 숨김 확인 (카메라 화면 집중)
+    document.getElementById('main-content-container').style.display = 'none'; 
+    
+    // 카메라 비디오 컨테이너 표시
+    document.getElementById('video-container').style.display = 'block';
+    
+    // 촬영 제어 버튼 및 가이드 메시지 표시
+    document.getElementById('controls').style.display = 'flex';
+    document.getElementById('shoot-btn').style.display = 'block';
+    document.getElementById('shoot-msg').style.display = 'block';
+
+    // 🟢 [사용자 요청 반영] 촬영 시작 시 상단 앱 타이틀 표시
+    // (CSS에서 초기 상태가 display: none인 경우 여기서 block으로 변경)
     document.getElementById('app-title').style.display = 'block';
 
-    // 3. 시작 페이지 전체 숨김 및 카메라 활성화
-    document.getElementById('step-start').style.display = 'none';
-    document.getElementById('video-container').style.display = 'block';
+    // 3. 카메라 스트림 설정 및 재생
+    try {
+        // 고화질 스트림 요청 (Full HD급 지향)
+        const constraints = { 
+            video: {
+                width: { ideal: 1920 },
+                height: { ideal: 1440 }
+            }, 
+            audio: false 
+        };
+        
+        const stream = await navigator.mediaDevices.getUserMedia(constraints);
+        videoStream = stream;
+        video.srcObject = stream;
+        
+        // 비디오 메타데이터 로드 완료 시 재생 시작
+        video.onloadedmetadata = () => {
+            video.play();
+        };
 
-            // 카메라 화면 활성화
-            document.getElementById('main-content-container').style.display = 'none'; 
-            
-            // 컨트롤/메시지 표시
-            document.getElementById('controls').style.display = 'flex';
-            document.getElementById('shoot-btn').style.display = 'block';
-            document.getElementById('shoot-msg').style.display = 'block';
-
-            // 촬영 시작 시 제목 숨기기
-            document.getElementById('app-title').style.display = 'none';
-
-            // 카메라 사용 권한 요청 및 스트림 설정
-            try {
-                // 🔴 [수정] 고화질 스트림을 요청하는 제약 조건 추가 (Full HD급)
-                const constraints = { 
-                    video: {
-                        // 최소 해상도 요청 (iPad/아이폰에서 안정적인 Full HD급: 1920x1440 비율)
-                        width: { ideal: 1920 },
-                        height: { ideal: 1440 }
-                    }, 
-                    audio: false 
-                };
-                const stream = await navigator.mediaDevices.getUserMedia(constraints);
-                videoStream = stream;
-                video.srcObject = stream;
-                
-                // 비디오 준비 완료 시 재생
-                video.onloadedmetadata = () => {
-                    video.play();
-                };
-
-                // 촬영 버튼에 시퀀스 연결
-                document.getElementById('shoot-btn').onclick = startShootingSequence;
-                
-            } catch (err) {
-                console.error("카메라 접근 오류: ", err);
-                alert("카메라 접근 권한이 필요합니다! (" + err + ")");
-                
-                // 오류 시 원상 복구
-                document.getElementById('video-container').style.display = 'none';
-                document.getElementById('step-start').style.display = 'flex';
-                document.getElementById('app-title').style.display = 'block';
-            }
-        }
+        // '촬영 시작' 버튼에 실제 촬영 시퀀스 함수 연결
+        document.getElementById('shoot-btn').onclick = startShootingSequence;
+        
+    } catch (err) {
+        console.error("카메라 접근 오류: ", err);
+        alert("카메라 접근 권한이 필요합니다! (" + err + ")");
+        
+        // 오류 발생 시 UI 원상 복구 (홈 화면으로)
+        document.getElementById('video-container').style.display = 'none';
+        document.getElementById('step-start').style.display = 'flex';
+        document.getElementById('app-title').style.display = 'none'; // 오류 시 다시 숨김
+    }
+}
 
         async function startShootingSequence() {
             // 촬영 시작 시 메시지 숨기기
