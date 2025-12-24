@@ -46,6 +46,7 @@
             border-radius: 10px;
             cursor: default; 
             font-size: 20px; 
+            display: none;
         }
         h1#app-title.clickable { cursor: pointer; } 
         h1#app-title:hover { opacity: 0.8; }
@@ -741,9 +742,6 @@
     <div class="start-page-title">
         인생네컷 <span>📸</span>
     </div>
-
-    <div class="start-buttons-container">
-        </div>
 </div>
         <div class="start-buttons-container">
         
@@ -885,7 +883,8 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('main-content-container').style.display = 'none'; 
         document.getElementById('step-start').style.display = 'flex'; 
         setHomeButtonActive(false); 
-        
+
+        document.getElementById('app-title').style.display = 'none'; // 🟢 [추가] 첫 화면 로드 시 숨김 확인
         document.getElementById('start-shoot-btn').onclick = startCamera; 
         document.getElementById('loading-screen').style.display = 'none'; 
     }, 1000);
@@ -1189,6 +1188,9 @@ function saveShareMessage() {
                 alert("사용할 프레임을 먼저 등록하거나 선택해주세요!");
                 return;
             }
+
+            // 상단 타이틀 표시
+            document.getElementById('app-title').style.display = 'block'; // 🟢 [추가] 촬영 시작 시 타이틀 등장
 
             // 카메라 화면 활성화
             document.getElementById('step-start').style.display = 'none';
