@@ -451,45 +451,45 @@
         }
 
         /* 🟢 관리자 패널 (버튼 바로 위에 배치) */
-/* 🟢 관리자 패널 수정: 버튼 위 위치 고정 및 너비 확장 */
-#admin-panel {
-    display: none; 
-    /* 95%로 설정하되, 최대치를 1000px 이상으로 넉넉히 잡습니다 */
-    width: 95vw; 
-    max-width: 1000px; 
-    background: rgba(40, 40, 40, 0.95);
-    padding: 20px;
-    border-radius: 20px;
-    border: 1px dashed #ff6b81;
-    box-sizing: border-box;
-    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+        /* 🟢 관리자 패널 수정: 버튼 위 위치 고정 및 너비 확장 */
+        #admin-panel {
+            display: none; 
+           /* 95%로 설정하되, 최대치를 1000px 이상으로 넉넉히 잡습니다 */
+            width: 90vw; 
+            max-width: 1000px; 
+            background: rgba(40, 40, 40, 0.95);
+            padding: 20px;
+            border-radius: 20px;
+            border: 1px dashed #ff6b81;
+            box-sizing: border-box;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
 
-    /* 위치 설정 */
-    position: absolute;
-    bottom: 105%;       /* 버튼과 약간 더 띄움 */
-    left: 50%;          
-    transform: translateX(-50%); 
-    z-index: 100;
-}
+           /* 위치 설정 */
+           position: absolute;
+           bottom: 105%;       /* 버튼과 약간 더 띄움 */
+           left: 50%;          
+           transform: translateX(-50%); 
+           z-index: 100;
+        }
 
-#start-frame-gallery {
-    display: flex;
-    gap: 15px; /* 프레임 사이 간격 */
-    flex-shrink: 0; /* 내용이 줄어들지 않게 */
-}
+        #start-frame-gallery {
+          display: flex;
+          gap: 15px; /* 프레임 사이 간격 */
+          flex-shrink: 0; /* 내용이 줄어들지 않게 */
+        }
 
         /* 🟢 프레임 목록 가로 스크롤 영역 */
         #start-frame-gallery-wrapper {
-    display: flex;
-    align-items: flex-start; /* 상단 기준 정렬 */
-    justify-content: flex-start; /* 🟢 왼쪽부터 차례대로 정렬 */
-    gap: 15px;
-    overflow-x: auto; 
-    padding: 15px 5px;
-    width: 100%;
-                -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
+            display: flex;
+            align-items: flex-start; /* 상단 기준 정렬 */
+            justify-content: flex-start; /* 🟢 왼쪽부터 차례대로 정렬 */
+            gap: 15px;
+            overflow-x: auto; 
+            padding: 15px 5px;
+            width: 100%;
+            -webkit-overflow-scrolling: touch; /* 모바일 부드러운 스크롤 */
             scrollbar-width: thin;
-}
+    }
 
         /* 스크롤바 디자인 (선택 사항) */
         #start-frame-gallery-wrapper::-webkit-scrollbar {
@@ -570,11 +570,12 @@
         }
 
         #start-shoot-btn {
-            background: #ff6b81;
-            padding: 20px;
+            background: #ff6b81; 
+            padding: 18px 50px; /* 상하 18px, 좌우 50px로 여백 조정 */
             font-size: 22px;
             border-radius: 40px;
-            width: 100%;
+            width: auto;         /* 너비를 콘텐츠에 맞게 자동으로 설정 */
+            min-width: 200px;    /* 너무 작아지지 않도록 최소 너비 지정 */
             font-weight: bold;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
@@ -633,15 +634,19 @@
         .frame-add-btn span { font-size: 1.5em; margin-bottom: 5px; }
 
         /* 🟢 촬영하기 버튼 하단 고정 */
-        .start-buttons-container {
-            position: absolute;
-            bottom: 15%;  /* 화면 하단 여백 */
-            width: 90%;
-            max-width: 400px;
-            left: 50%;
-            transform: translateX(-50%);
-            z-index: 20;
-        }
+.start-buttons-container {
+    position: absolute;
+    bottom: 15%;  
+    width: 90%;
+    max-width: 400px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column; 
+    align-items: center; /* 👈 이 속성이 버튼을 중앙으로 모아줍니다 */
+    gap: 15px; 
+    z-index: 20;
+}
         
         #start-shoot-btn {
             background: #ff6b81; 
@@ -710,26 +715,50 @@
     <h1 id="app-title">인생네컷</h1> 
 
     
-<div id="step-start">
-    <div class="start-buttons-container">
+    <div id="step-start">
+        <div class="start-buttons-container">
         
-<div id="admin-panel">
+<div id="admin-panel" style="display:none;"> 
     <h3 style="margin-top: 0; color: #ff6b81; font-size: 18px;">프레임 관리자</h3>
-    <div id="start-frame-gallery-wrapper">
-        <div id="start-frame-gallery">
-            </div>
-        
+    
+    <div id="start-frame-gallery-wrapper" style="margin-bottom: 20px;">
+        <div id="start-frame-gallery"></div>
         <label for="frame-upload" class="frame-add-btn" id="add-btn-label">
             <span>+</span> 프레임 추가
         </label>
         <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
     </div>
-</div>
 
-        <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
-        <button id="start-shoot-btn" disabled>📸 촬영하기</button>
+    <div style="text-align: left; border-top: 1px solid #444; pt: 15px; margin-top: 10px;">
+        <label style="font-size: 14px; color: #ddd; display: block; margin: 15px 0 8px 0;">공유 메시지 설정:</label>
+        <textarea id="admin-share-message" placeholder="공유 시 표시될 문구를 입력하세요" style="
+            width: 100%; 
+            height: 80px; 
+            background: #444; 
+            color: white; 
+            border: 1px solid #555; 
+            border-radius: 8px; 
+            padding: 12px; 
+            box-sizing: border-box;
+            font-family: inherit;
+            resize: none;
+            font-size: 14px;
+            line-height: 1.5;
+        "></textarea>
     </div>
 </div>
+        
+            <label for="frame-upload" class="frame-add-btn" id="add-btn-label">
+                <span>+</span> 프레임 추가
+            </label>
+            <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+        </div>
+    </div>
+
+           <button id="admin-toggle-btn" onclick="toggleAdminMode()">⚙️ 관리자 모드</button>
+            <button id="start-shoot-btn" disabled>📸 촬영하기</button>
+        </div>
+    </div>
     
     <div id="video-container">
         <button class="action-button-base home-button-camera" onclick="stopCameraAndGoHome()">
@@ -1022,38 +1051,38 @@
         }
         
         // 1단계 프레임 갤러리 렌더링
-function renderStartFrameGallery() {
-    const galleryEl = document.getElementById('start-frame-gallery');
-    if (!galleryEl) return;
+        function renderStartFrameGallery() {
+            const galleryEl = document.getElementById('start-frame-gallery');
+            if (!galleryEl) return;
     
-    // 1. 등록된 프레임들 렌더링
-    let htmlContent = uploadedFrames.map(frame => {
-        const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
-        return `
-        <div class="start-frame-item ${String(selectedFrameId) === String(frame.id) ? 'selected' : ''}" 
-             data-frame-id="${frame.id}"
-             onclick="selectStartFrame('${frame.id}')">
-            <img src="${frame.dataUrl}" alt="${fileName}">
-            <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">X</button>
-            <div class="frame-name">${fileName}</div>
-        </div>
-        `;
-    }).join('');
+            // 1. 등록된 프레임들 렌더링
+            let htmlContent = uploadedFrames.map(frame => {
+                const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
+                return `
+                <div class="start-frame-item ${String(selectedFrameId) === String(frame.id) ? 'selected' : ''}" 
+                     data-frame-id="${frame.id}"
+                    onclick="selectStartFrame('${frame.id}')">
+                   <img src="${frame.dataUrl}" alt="${fileName}">
+                   <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">X</button>
+                   <div class="frame-name">${fileName}</div>
+               </div>
+               `;
+            }).join('');
 
-    // 2. 갤러리 내용 채우기
-    galleryEl.innerHTML = htmlContent;
+            // 2. 갤러리 내용 채우기
+            galleryEl.innerHTML = htmlContent;
 
-    // 3. [핵심] 업로드 버튼을 갤러리 리스트 바로 뒤에 붙임
-    const addBtnLabel = document.getElementById('add-btn-label');
-    galleryEl.appendChild(addBtnLabel); 
+            // 3. [핵심] 업로드 버튼을 갤러리 리스트 바로 뒤에 붙임
+            const addBtnLabel = document.getElementById('add-btn-label');
+            galleryEl.appendChild(addBtnLabel); 
     
-    // 촬영 버튼 활성화 로직 유지
-    const startShootBtn = document.getElementById('start-shoot-btn');
-    if (startShootBtn) {
-        startShootBtn.disabled = !selectedFrameId;
-        startShootBtn.style.backgroundColor = selectedFrameId ? '#ff6b81' : '#666666';
-    }
-}
+            // 촬영 버튼 활성화 로직 유지
+            const startShootBtn = document.getElementById('start-shoot-btn');
+            if (startShootBtn) {
+                startShootBtn.disabled = !selectedFrameId;
+                startShootBtn.style.backgroundColor = selectedFrameId ? '#ff6b81' : '#666666';
+            }
+        }
         
         // 1단계에서 프레임 선택
         function selectStartFrame(id) {
@@ -1600,45 +1629,93 @@ function renderStartFrameGallery() {
         // --- 🟢 [새 함수] iOS Web Share API를 사용해 공유 시트 직접 호출 ---
         // 이 함수는 버튼 클릭 시 즉시 iOS 공유 시트 (Messages, AirDrop 등)를 띄웁니다.
         // 🚨 주의: 이 기능은 HTTPS 환경(실제 웹사이트)에서만 정상 작동합니다.
-        async function downloadAndShare() {
-            if (!finalImageDataURL) {
-                alert("이미지 데이터가 준비되지 않았습니다. 다시 시도해 주세요.");
-                return;
-            }
-            
-            // Web Share API 지원 확인
-            if (navigator.share) {
-                try {
-                    // Data URL (base64)을 Blob 파일로 변환
-                    const response = await fetch(finalImageDataURL);
-                    const blob = await response.blob();
-                    
-                    // Blob을 File 객체로 변환 (공유 API는 File/Blob을 첨부할 때 가장 안정적입니다.)
-                    const file = new File([blob], "InsaengNekot.png", { type: 'image/png' });
+// 1. 전역 변수 선언 (기본값 설정)
+// [추가/수정] 공유 메시지 전역 변수 (기본값 설정)
+let customShareMessage = localStorage.getItem('customShareMessage') || "산곡제일교회 죠-이 페스티발 인생네컷 사진입니다.";
 
-                    // 공유 시트 호출
-                    await navigator.share({
-                        title: '나만의 인생네컷 완성!',
-                        text: '산곡제일교회 죠-이 페스티발 인생네컷 사진입니다.',
-                        files: [file], // 파일 객체 첨부 (iOS 공유 시트가 처리)
-                    });
-                    console.log('공유 성공');
-
-                } catch (error) {
-                    // 사용자가 공유를 취소했거나, HTTPS/PWA 조건 미충족 시 오류 발생
-                    if (error.name === 'AbortError') {
-                        console.log('공유 취소됨');
-                    } else {
-                        console.error("공유 시트 호출 오류:", error);
-                        // 🚨 실패 시 안내: HTTPS 환경의 제약으로 인한 오류일 가능성이 높습니다.
-                        alert(`❌ 공유 시트 호출 실패: ${error.message}. 이 기능은 HTTPS 환경에서만 작동합니다. 대신 이미지를 꾹 눌러 공유해 주세요.`);
-                    }
-                }
-            } else {
-                // Web Share API를 지원하지 않는 브라우저 (PC 브라우저 등)
-                alert("❌ 이 브라우저는 버튼을 통한 직접 공유를 지원하지 않습니다. 이미지를 꾹 눌러 'Share' 옵션을 사용해주세요.");
-            }
+// --- 프레임 및 메시지 로드 함수 ---
+function loadFrames() {
+    // 1. 프레임 로드
+    const savedFrames = localStorage.getItem('customFrames');
+    if (savedFrames) {
+        try {
+            uploadedFrames = JSON.parse(savedFrames).map(f => ({ ...f, id: String(f.id) }));
+        } catch (e) {
+            console.error("프레임 파싱 에러:", e);
+            uploadedFrames = []; 
         }
+    }
+    
+    // 2. [수정] 공유 메시지 로드 및 입력창 값 설정
+    const savedMessage = localStorage.getItem('customShareMessage');
+    if (savedMessage) {
+        customShareMessage = savedMessage;
+    }
+    const messageInput = document.getElementById('admin-share-message');
+    if (messageInput) {
+        messageInput.value = customShareMessage;
+    }
+
+    // 3. 선택된 프레임 복구
+    selectedFrameId = localStorage.getItem('selectedFrameId');
+    if (selectedFrameId && !uploadedFrames.find(f => String(f.id) === String(selectedFrameId))) {
+        selectedFrameId = null; 
+    }
+    if (uploadedFrames.length > 0 && selectedFrameId === null) {
+        selectedFrameId = uploadedFrames[0].id;
+    }
+}
+
+// --- 초기화 이벤트 리스너 ---
+document.addEventListener('DOMContentLoaded', () => {
+    // 1. 기존 초기화 로직 (지연 실행)
+    setTimeout(() => {
+        setupCanvases(); 
+        loadFrames(); 
+        renderStartFrameGallery(); 
+        
+        document.getElementById('main-content-container').style.display = 'none'; 
+        document.getElementById('step-start').style.display = 'flex'; 
+        setHomeButtonActive(false); 
+        document.getElementById('start-shoot-btn').onclick = startCamera; 
+        document.getElementById('loading-screen').style.display = 'none'; 
+        
+        // 2. [추가] 메시지 입력 시 실시간 저장 이벤트 연결
+        const messageInput = document.getElementById('admin-share-message');
+        if (messageInput) {
+            messageInput.addEventListener('input', (e) => {
+                customShareMessage = e.target.value;
+                localStorage.setItem('customShareMessage', customShareMessage);
+            });
+        }
+    }, 1000);
+});
+
+// --- 공유 함수 (최종 반영) ---
+async function downloadAndShare() {
+    if (!finalImageDataURL) {
+        alert("이미지가 준비되지 않았습니다.");
+        return;
+    }
+    
+    if (navigator.share) {
+        try {
+            const response = await fetch(finalImageDataURL);
+            const blob = await response.blob();
+            const file = new File([blob], "InsaengNekot.png", { type: 'image/png' });
+
+            await navigator.share({
+                title: '나만의 인생네컷 완성!',
+                text: customShareMessage, // 관리자 모드에서 설정한 문구가 반영됨
+                files: [file],
+            });
+        } catch (error) {
+            if (error.name !== 'AbortError') alert(`공유 실패: ${error.message}`);
+        }
+    } else {
+        alert("이 브라우저는 직접 공유 기능을 지원하지 않습니다.");
+    }
+}
 
         async function updatePreview(canvasId) {
             await drawComposite(canvasId); 
