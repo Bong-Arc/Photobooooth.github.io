@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>나만의 인생네컷 부스</title>
+    <title>인생네컷</title>
     <meta name="robots" content="noindex, nofollow">
 
     <style>
@@ -65,7 +65,7 @@
             font-size: 60px; /* 크기를 대폭 확대 */
             color: #ff6b81;
             font-weight: 900;
-            margin-bottom: 50%;
+            margin-bottom: 70%;
             text-shadow: 3px 3px 10px rgba(0,0,0,0.3);
             animation: fadeInDown 0.8s ease-out;
         }
@@ -88,7 +88,7 @@
         }
 
         /* 관리자 모드 버튼 전용 */
-        #admin-mode-btn:hover {
+        #admin-mode-btn:hover, #help-btn:hover {
             background: #5a6268 !important;
         }
 
@@ -482,7 +482,7 @@
             padding: 15px;
             background: #444; /* 배경색 조정 */
             border-radius: 15px;
-            margin-top: auto; 
+            margin-top: 10px; 
             margin-bottom: 20px;
             display: flex;
             flex-wrap: nowrap;
@@ -646,34 +646,75 @@
         </div>
 
         <div class="start-buttons-container">
-            <button id="admin-mode-btn" onclick="toggleAdminMode(true)" style="background: #6c757d; width: 100%; height: 58px; margin-bottom: 15px; font-size: 20px;">
-                ⚙️ 관리자 모드
+            <div style="display: flex; gap: 10px; margin-bottom: 15px;">
+                <button id="admin-mode-btn" onclick="toggleAdminMode(true)" style="flex: 1; background: #444; height: 50px; font-size: 16px; margin: 0;">
+                    ⚙️ 관리자
+                </button>
+                <button id="help-btn" onclick="toggleHelpModal(true)" style="flex: 1; background: #444; height: 50px; font-size: 16px; margin: 0;">
+                    ❓ 도움말
+                </button>
+            </div>
+
+            <button id="start-shoot-btn" disabled style="width: 100%; height: 65px; font-size: 22px; margin: 0;">
+                📸 촬영하기
             </button>
-        
-            <button id="start-shoot-btn" disabled style="width: 100%; height: 58px; font-size: 20px; margin: 0;">
-                📸</span> 촬영하기
-            </button>
+        </div>
+
+        <div id="help-modal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1100; justify-content:center; align-items:center;">
+            <div style="background:#333; width:85%; max-width:600px; padding:25px; border-radius:20px; text-align:left; line-height: 1.6;">
+                <h2 style="color:#00d2d3; margin-top:0; text-align:center;">📸 사용 방법</h2>
+                <p> <b>⚙️ 관리자 모드</b> </p>
+                <p>1. 사진첩에 있는 <b>프레임을 직접 추가</b>해주세요. </p>
+                <p>   (프레임은 PNG 파일을 사용해주세요.)</p>
+                <p>2. <b>타이머</b>는 기본 5초로 작동합니다. </p>
+                <p>3. <b>공유 메세지</b>는 공유 시트를 통한 메세지 전달 시 적용됩니다.</p>
+                <p> <b>📸 어플 실행</b> </p>
+                <p>1. 사진은 <b>총 6장</b>이 촬영됩니다.</p>
+                <p>2. 촬영된 6장 중 <b>4장</b>을 골라주세요.</p>
+                <p>3. 원하는 디자인의 <b>프레임</b>을 선택합니다.</p>
+                <p>4. 완성된 사진을 <b>저장</b>하거나 <b>공유</b>하세요!</p>
+                <p>5. <b>공유하기 버튼을 통한 메세지 전달 시</b> 관리자 모드에서 작성한 글이 함께 전송됩니다.</p>
+                <div style="text-align: center; margin-top: 20px;">
+                    <button onclick="toggleHelpModal(false)" style="background:#ff6b81; width:30%; font-weight: bold; padding: 15px; border-radius: 30px;">확인</button>
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="admin-modal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1000; justify-content:center; align-items:center;">
         <div style="background:#333; width:90%; max-width:500px; padding:20px; border-radius:15px; text-align:center;">
             <h2 style="color:#00d2d3; margin-top:0;">⚙️ 관리자 모드</h2>
+
+            <div style="text-align: left; margin-bottom: 20px;">
+            <label style="color: #00d2d3; font-size: 0.9em; font-weight: bold; margin-left: 5px;">
+                🖼️ 프레임 추가</label>
         
-            <div id="start-frame-gallery-wrapper" style="background:#444; margin-bottom:20px;">
-                <div id="start-frame-gallery"></div>
-                <label for="frame-upload" class="frame-add-btn">
-                    <span>+</span> 프레임 추가
-                </label>
-                <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+                <div id="start-frame-gallery-wrapper" style="background:#444; margin-bottom:20px;">
+                    <div id="start-frame-gallery"></div>
+                    <label for="frame-upload" class="frame-add-btn">
+                        <span>+</span> 프레임 추가</label>
+                    <input type="file" id="frame-upload" accept="image/png, image/jpeg" multiple style="display: none;">
+                </div>
             </div>
+
+        <div style="text-align: left; margin-bottom: 20px;">
+            <label style="color: #00d2d3; font-size: 0.9em; font-weight: bold; margin-left: 5px;">
+                ⏱️ 타이머 설정</label>
+            <div id="timer-button-group" style="display: flex; gap: 10px; margin-top: 8px;">
+                <button type="button" class="timer-btn" onclick="setTimer(3)" style="flex: 1; padding: 10px; font-size: 16px; border-radius: 8px; background: #555;">3초</button>
+                <button type="button" class="timer-btn" onclick="setTimer(5)" style="flex: 1; padding: 10px; font-size: 16px; border-radius: 8px; background: #555;">5초</button>
+                <button type="button" class="timer-btn" onclick="setTimer(7)" style="flex: 1; padding: 10px; font-size: 16px; border-radius: 8px; background: #555;">7초</button>
+                <button type="button" class="timer-btn" onclick="setTimer(9)" style="flex: 1; padding: 10px; font-size: 16px; border-radius: 8px; background: #555;">9초</button>
+            </div>
+        </div>
 
             <div style="text-align: left; margin-bottom: 20px;">
                 <label style="color: #00d2d3; font-size: 0.9em; font-weight: bold; margin-left: 5px;">📤 공유 메시지 설정</label>
                 <textarea id="share-message-input" style="width: 100%; height: 60px; margin-top: 5px; border-radius: 8px; padding: 10px; box-sizing: border-box; background: #222; color: white; border: 1px solid #555; resize: none;" placeholder="공유 시 표시될 문구를 입력하세요."></textarea>
             </div>
 
-            <button onclick="toggleAdminMode(false)" style="background:#ff6b81; width:30%; font-weight: bold; padding: 15px; border-radius: 30px;">저장하기</button>
+            <button onclick="toggleAdminMode(false)" style="background:#ff6b81; width:30%; font-weight: bold; padding: 15px; border-radius: 30px;">
+                저장하기</button>
         </div>
     </div>
 
@@ -730,10 +771,14 @@
     
             <canvas id="final-canvas"></canvas> 
             <img id="final-image-for-save" style="display: none;"/> 
+
+            <div class="save-button-wrapper" style="display: flex; gap: 25px; width: 95%; max-width: 500px; margin: 20px auto;"> 
+                <button id="direct-save-btn" class="save-button" onclick="saveDirectly()" style="flex: 1; background-color: #00a8a8; margin: 0;">
+                    <span style="font-size: 1.2em; margin-right: 8px;">💾</span> 저장하기
+                </button>
     
-            <div class="save-button-wrapper"> 
-                <button id="save-and-stay-btn" class="save-button" onclick="downloadAndShare()">
-                    <span style="font-size: 1.2em; margin-right: 5px;">📤</span> 저장/공유하기
+                <button id="save-and-stay-btn" class="save-button" onclick="downloadAndShare()" style="flex: 1; background-color: #555; margin: 0;">
+                    <span style="font-size: 1.2em; margin-right: 8px;">📤</span> 공유하기
                 </button>
             </div>
     
@@ -755,6 +800,7 @@
         let videoStream;
         const video = document.getElementById('video');
         const photos = []; // 촬영된 6장의 사진 (DataURL)
+        let timerSeconds = 5; // 기본값 5초
         let selectedIndices = []; // 선택된 4장의 사진 인덱스
         let currentShot = 0; // 현재 촬영 횟수
         let uploadedFrames = []; // 사용자가 업로드한 프레임 목록
@@ -812,42 +858,63 @@
         }
 
         // 🟢 [추가] 관리자 모드 토글 함수
-function toggleAdminMode(show) {
-    const modal = document.getElementById('admin-modal');
-    modal.style.display = show ? 'flex' : 'none';
+        function toggleAdminMode(show) {
+            const modal = document.getElementById('admin-modal');
+            modal.style.display = show ? 'flex' : 'none';
     
-    // 모달을 닫을 때 메인 화면의 촬영 버튼 상태를 갱신
-    if (!show) {
-        renderStartFrameGallery(); 
-    }
-}
+            // 모달을 닫을 때 메인 화면의 촬영 버튼 상태를 갱신
+            if (!show) {
+                renderStartFrameGallery(); 
+            }
+        }
 
-// 🟢 [기존 코드 유지 및 확인] renderStartFrameGallery 내부 수정
-// 프레임이 관리자 모달 안에 있으므로, UI 업데이트 시 모달 내 요소를 갱신하게 됩니다.
-function renderStartFrameGallery() {
-    const galleryEl = document.getElementById('start-frame-gallery');
-    if (!galleryEl) return;
+        // 🟢 [기존 코드 유지 및 확인] renderStartFrameGallery 내부 수정
+        // 프레임이 관리자 모달 안에 있으므로, UI 업데이트 시 모달 내 요소를 갱신하게 됩니다.
+        function renderStartFrameGallery() {
+            const galleryEl = document.getElementById('start-frame-gallery');
+            if (!galleryEl) return;
     
-    galleryEl.innerHTML = uploadedFrames.map(frame => {
-        const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
-        return `
-        <div class="start-frame-item ${String(selectedFrameId) === String(frame.id) ? 'selected' : ''}" 
-             data-frame-id="${frame.id}"
-             onclick="selectStartFrame('${frame.id}')">
-            <img src="${frame.dataUrl}" alt="${fileName}">
-            <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">X</button>
-            <div class="frame-name">${fileName}</div>
-        </div>
-        `;
-    }).join('');
+            galleryEl.innerHTML = uploadedFrames.map(frame => {
+                const fileName = frame.name.split('/').pop().replace(/\.png|\.jpg/i, '');
+                return `
+                <div class="start-frame-item ${String(selectedFrameId) === String(frame.id) ? 'selected' : ''}" 
+                     data-frame-id="${frame.id}"
+                     onclick="selectStartFrame('${frame.id}')">
+                  <img src="${frame.dataUrl}" alt="${fileName}">
+                  <button class="remove-btn" onclick="event.stopPropagation(); removeFrame('${frame.id}')">X</button>
+                  <div class="frame-name">${fileName}</div>
+              </div>
+              `;
+          }).join('');
     
-    const startShootBtn = document.getElementById('start-shoot-btn');
-    if (startShootBtn) {
-        // 선택된 프레임이 있어야 촬영 버튼 활성화
-        startShootBtn.disabled = !selectedFrameId;
-        startShootBtn.style.backgroundColor = selectedFrameId ? '#ff6b81' : '#666666';
-    }
-}
+          const startShootBtn = document.getElementById('start-shoot-btn');
+          if (startShootBtn) {
+              // 선택된 프레임이 있어야 촬영 버튼 활성화
+              startShootBtn.disabled = !selectedFrameId;
+              startShootBtn.style.backgroundColor = selectedFrameId ? '#ff6b81' : '#666666';
+          }
+        }
+
+        // 타이머 값 설정 및 UI 업데이트
+        function setTimer(sec) {
+            timerSeconds = sec;
+            updateTimerButtons(sec);
+        }
+
+        // 선택된 타이머 버튼의 색상을 변경하는 함수
+        function updateTimerButtons(selectedSec) {
+            const buttons = document.querySelectorAll('.timer-btn');
+            buttons.forEach(btn => {
+                if (parseInt(btn.innerText) === selectedSec) {
+                    btn.style.background = '#ff6b81'; // 선택된 버튼 (핑크)
+                    btn.style.color = 'white';
+                } else {
+                    btn.style.background = '#444';    // 비선택 버튼 (어두운 회색)
+                    btn.style.color = '#ccc';
+                }
+            });
+        }
+
 
         // --- 네비게이션 함수 ---
         function goToHome() {
@@ -1025,12 +1092,15 @@ function renderStartFrameGallery() {
         }
 
         // 관리자 모드 열기/닫기 및 문구 저장 로직
+// toggleAdminMode 함수 내 저장 로직 수정
 function toggleAdminMode(show) {
     const modal = document.getElementById('admin-modal');
     modal.style.display = show ? 'flex' : 'none';
     
     if (!show) {
-        // 닫을 때(저장 버튼 클릭 시) 입력된 문구를 변수와 로컬 스토리지에 저장
+        // 닫을 때 현재 선택된 timerSeconds를 로컬 스토리지에 저장
+        localStorage.setItem('customTimerSeconds', timerSeconds);
+
         const inputMsg = document.getElementById('share-message-input').value;
         if(inputMsg) {
             shareMessage = inputMsg;
@@ -1040,16 +1110,21 @@ function toggleAdminMode(show) {
     }
 }
 
-// 페이지가 로드될 때 저장된 문구가 있으면 불러오기
 window.addEventListener('load', () => {
+    // 공유 메시지 로드
     const savedMsg = localStorage.getItem('customShareMessage');
     if (savedMsg) {
         shareMessage = savedMsg;
-        const inputEl = document.getElementById('share-message-input');
-        if(inputEl) inputEl.value = shareMessage;
+        document.getElementById('share-message-input').value = shareMessage;
     }
-});
 
+    // 타이머 값 로드 및 버튼 초기화
+    const savedTimer = localStorage.getItem('customTimerSeconds');
+    if (savedTimer) {
+        timerSeconds = parseInt(savedTimer);
+    }
+    updateTimerButtons(timerSeconds); // 저장된 값에 맞춰 버튼 색상 변경
+});
         // ------------------------------------
         // 🟢 [최종 교체] 프레임 파일 업로드 처리 (진단 및 안정화 로직)
         // ------------------------------------
@@ -1189,11 +1264,11 @@ window.addEventListener('load', () => {
                 currentShot = i;
                 shotCountEl.innerText = `${currentShot} / 6`;
 
-               // 카운트다운 (타이머)
-               for (let c = 1; c > 0; c--) {
-            timerEl.innerText = c;
-                   await new Promise(r => setTimeout(r, 1000));
-               }
+// 🔥 수정된 부분: timerSeconds 변수를 사용하여 카운트다운
+for (let c = timerSeconds; c > 0; c--) {
+    timerEl.innerText = c;
+    await new Promise(r => setTimeout(r, 1000));
+}
         
                timerEl.innerText = "📸";
                flashEffect();
@@ -1586,12 +1661,39 @@ window.addEventListener('load', () => {
             }
         }
 
-        // --- 🟢 [새 함수] iOS Web Share API를 사용해 공유 시트 직접 호출 ---
-        // 이 함수는 버튼 클릭 시 즉시 iOS 공유 시트 (Messages, AirDrop 등)를 띄웁니다.
+        // 🟢 [추가] 도움말 모달 제어 함수
+function toggleHelpModal(show) {
+    const modal = document.getElementById('help-modal');
+    modal.style.display = show ? 'flex' : 'none';
+}
+
         // 🚨 주의: 이 기능은 HTTPS 환경(실제 웹사이트)에서만 정상 작동합니다.
+// 1. [추가] 즉시 저장 함수 (사진첩/다운로드 폴더로 바로 전송)
+function saveDirectly() {
+    if (!finalImageDataURL) {
+        alert("이미지 데이터가 준비되지 않았습니다.");
+        return;
+    }
+
+    const now = new Date();
+    const fileName = `Life4Cut_${now.getTime()}.png`;
+
+    const link = document.createElement('a');
+    link.href = finalImageDataURL;
+    link.download = fileName;
+    
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // 안내 문구 (iOS 배려)
+    alert("사진 저장을 저장했습니다.\n'파일' 앱의 다운로드 항목을 확인해주세요");
+}
+
+// 2. [유지] 기존 공유하기 함수 (공유 시트 호출)
 async function downloadAndShare() {
     if (!finalImageDataURL) {
-        alert("이미지 데이터가 준비되지 않았습니다. 다시 시도해 주세요.");
+        alert("이미지 데이터가 준비되지 않았습니다.");
         return;
     }
     
@@ -1602,18 +1704,17 @@ async function downloadAndShare() {
             const file = new File([blob], "InsaengNekot.png", { type: 'image/png' });
 
             await navigator.share({
-                title: '나만의 인생네컷 완성!',
-                text: shareMessage, // 🟢 [수정] 강제된 문구 대신 변수 사용
+                title: '인생네컷!',
+                text: shareMessage,
                 files: [file],
             });
-            console.log('공유 성공');
         } catch (error) {
             if (error.name !== 'AbortError') {
-                alert(`❌ 공유 실패: ${error.message}`);
+                alert(`공유 실패: ${error.message}`);
             }
         }
     } else {
-        alert("❌ 이 브라우저는 직접 공유를 지원하지 않습니다. 이미지를 꾹 눌러 공유해주세요.");
+        alert("이 브라우저는 공유 기능을 지원하지 않습니다. 이미지를 길게 눌러 저장해 주세요.");
     }
 }
 
