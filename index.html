@@ -11,7 +11,6 @@
     <meta name="apple-mobile-web-app-title" content="인생네컷"> 
 
     <style>
-        @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
         /* 🟢 [추가] 브라우저 메인 스크롤바 완전히 제거 */
         html, body {
             height: 100vh; /* 뷰포트 높이 전체를 차지하도록 강제 */
@@ -20,7 +19,7 @@
         }
         
         body {
-            font-family: 'Pretendard', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", sans-serif;
             background-color: #222;
             color: white;
             text-align: center;
@@ -672,7 +671,7 @@
                 <p>2. <b>타이머</b>는 기본 5초로 작동합니다. </p>
                 <p>3. <b>공유 메세지</b>는 공유 시트를 통한 메세지 전달 시 적용됩니다.</p>
                 <p> <b>📸 어플 실행</b> </p>
-                <p>1. 오른쪽 상단에 공유하기 -> 홈화면에 추가를 누르시면 어플처럼 사용이 가능합니다.</p>
+                <p>1. 오른쪽 상단에 <b>공유하기 -> 홈화면에 추가</b>를 누르시면 어플처럼 사용이 가능합니다.</p>
                 <p>2. 사진은 <b>총 6장</b>이 촬영됩니다.</p>
                 <p>3. 촬영된 6장 중 <b>4장</b>을 골라주세요.</p>
                 <p>4. 원하는 디자인의 <b>프레임</b>을 선택합니다.</p>
@@ -776,17 +775,13 @@
             <canvas id="final-canvas"></canvas> 
             <img id="final-image-for-save" style="display: none;"/> 
 
-            <div class="save-button-wrapper" style="display: flex; gap: 25px; width: 95%; max-width: 500px; margin: 20px auto;"> 
-                <button id="direct-save-btn" class="save-button" onclick="saveDirectly()" style="flex: 1; background-color: #00a8a8; margin: 0;">
-                    <span style="font-size: 1.2em; margin-right: 8px;">💾</span> 저장하기
-                </button>
-    
-                <button id="save-and-stay-btn" class="save-button" onclick="downloadAndShare()" style="flex: 1; background-color: #555; margin: 0;">
-                    <span style="font-size: 1.2em; margin-right: 8px;">📤</span> 공유하기
-                </button>
-            </div>
+        <div class="save-button-wrapper">
+            <button id="combined-save-btn" onclick="handleSaveAndShare()" class="main-button" style="background: #00d2d3">
+                📤 저장/공유하기
+            </button>
+        </div>
 
-            <h2 style="color:#7b7979; margin-top:0; font-size: 0.8em">저장된 사진은 <b>파일</b>앱의 다운로드에서 확인해주세요.</h2>
+            <h2 style="color:#7b7979; margin-top: 10px; font-size: 0.8em">이미지 저장 혹은 공유하기를 사용하여 추억을 간직하세요❣️</h2>
     
             <div class="result-nav-container">
             </div>
@@ -1673,77 +1668,61 @@ for (let c = timerSeconds; c > 0; c--) {
             modal.style.display = show ? 'flex' : 'none';
         }   
 
-        // 🚨 주의: 이 기능은 HTTPS 환경(실제 웹사이트)에서만 정상 작동합니다.
-        // 1. [추가] 즉시 저장 함수 (사진첩/다운로드 폴더로 바로 전송)
-async function saveDirectly() {
-    if (!finalImageDataURL) {
-        alert("이미지 데이터가 준비되지 않았습니다.");
-        return;
-    }
-
-    const saveBtn = document.getElementById('direct-save-btn');
-    saveBtn.disabled = true;
-
-    try {
-        const response = await fetch(finalImageDataURL);
-        const blob = await response.blob();
-        
-        // 💡 핵심: 타입을 'image/png'가 아닌 'application/octet-stream'으로 설정하여 
-        // 브라우저가 화면에 보여주는 대신 "다운로드 팝업"을 띄우게 강제합니다.
-        const forcedBlob = new Blob([blob], { type: 'application/octet-stream' });
-        const url = window.URL.createObjectURL(forcedBlob);
-
-        const now = new Date();
-        const yy = String(now.getFullYear()).slice(-2);
-        const mm = String(now.getMonth() + 1).padStart(2, '0');
-        const dd = String(now.getDate()).padStart(2, '0');
-        const fileName = `Life4Cut_${yy}${mm}${dd}.png`;
-
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = fileName;
-        
-        // iOS에서 중앙 팝업을 트리거하기 위한 필수 단계
-        document.body.appendChild(link);
-        link.click();
-        
-        setTimeout(() => {
-            document.body.removeChild(link);
-            window.URL.revokeObjectURL(url);
-            saveBtn.disabled = false;
-        }, 500);
-
-    } catch (error) {
-        console.error("저장 오류:", error);
-        saveBtn.disabled = false;
-    }
-}
-
-        // 2. [유지] 기존 공유하기 함수 (공유 시트 호출)
-        async function downloadAndShare() {
+        // 기존 saveDirectly, downloadAndShare 함수는 삭제하고 이 함수로 대체합니다.
+        async function handleSaveAndShare() {
             if (!finalImageDataURL) {
-                alert("이미지 데이터가 준비되지 않았습니다.");
+            alert("이미지가 아직 준비되지 않았습니다.");
                 return;
             }
-    
-            if (navigator.share) {
-                try {
-                    const response = await fetch(finalImageDataURL);
-                    const blob = await response.blob();
-                    const file = new File([blob], "InsaengNekot.png", { type: 'image/png' });
 
+        const btn = document.getElementById('combined-save-btn');
+            const originalText = btn.innerText;
+            const originalColor = btn.style.backgroundColor; // 원래 색상 저장
+
+            // 1. 버튼 상태 및 색상 변경 (처리 중)
+            btn.innerText = "⏳ 처리 중...";
+            btn.disabled = true;
+            btn.style.backgroundColor = "#444"; // 회색으로 변경
+            btn.style.cursor = "not-allowed";
+
+            try {
+                // 1. 이미지 데이터를 Blob으로 변환
+               const response = await fetch(finalImageDataURL);
+                const blob = await response.blob();
+        
+                // 2. 날짜 생성 (240520 형식)
+                const now = new Date();
+                const yy = String(now.getFullYear()).slice(-2);
+                const mm = String(now.getMonth() + 1).padStart(2, '0');
+               const dd = String(now.getDate()).padStart(2, '0');
+               const fileName = `Life4Cut_${yy}${mm}${dd}.png`;
+
+               // 3. 파일 객체 생성 (공유용)
+               const file = new File([blob], fileName, { type: 'image/png' });
+
+                // 4. iOS/Android 시스템 공유 시트 호출
+                if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     await navigator.share({
-                        title: '인생네컷!',
-                        text: shareMessage,
                         files: [file],
+                        title: '인생네컷 저장 및 공유'
                     });
-                } catch (error) {
-                    if (error.name !== 'AbortError') {
-                        alert(`공유 실패: ${error.message}`);
-                    }
+                } else {
+                    // 공유 기능을 지원하지 않는 브라우저일 경우 강제 다운로드
+                    const url = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = fileName;
+                    link.click();
+                    window.URL.revokeObjectURL(url);
                 }
-            } else {
-                alert("이 브라우저는 공유 기능을 지원하지 않습니다. 이미지를 길게 눌러 저장해 주세요.");
+            } catch (error) {
+                console.log("저장 취소 또는 오류 발생:", error);
+            } finally {
+                // 2. 완료 후 버튼 복구 (민트색으로 강제 지정)
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.style.backgroundColor = "#00d2d3"; // ✨ 민트색으로 변경
+                btn.style.cursor = "pointer";
             }
         }
 
