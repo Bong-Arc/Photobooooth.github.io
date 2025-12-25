@@ -1677,51 +1677,45 @@ for (let c = timerSeconds; c > 0; c--) {
         // 1. [추가] 즉시 저장 함수 (사진첩/다운로드 폴더로 바로 전송)
 async function saveDirectly() {
     if (!finalImageDataURL) {
-        alert("이미지 데이터가 준비되지 않았습니다. 다시 시도해 주세요.");
+        alert("이미지 데이터가 준비되지 않았습니다.");
         return;
     }
 
-    // 1. 버튼 여러 번 눌리는 것 방지
-    const btn = document.getElementById('direct-save-btn');
-    const originalText = btn.innerText;
-    btn.innerText = "⏳ 처리 중...";
-    btn.disabled = true;
+    const saveBtn = document.getElementById('direct-save-btn');
+    saveBtn.disabled = true;
 
     try {
-        // 2. DataURL을 Blob 객체로 변환 (iOS 대용량 처리 핵심)
         const response = await fetch(finalImageDataURL);
         const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
+        
+        // 💡 핵심: 타입을 'image/png'가 아닌 'application/octet-stream'으로 설정하여 
+        // 브라우저가 화면에 보여주는 대신 "다운로드 팝업"을 띄우게 강제합니다.
+        const forcedBlob = new Blob([blob], { type: 'application/octet-stream' });
+        const url = window.URL.createObjectURL(forcedBlob);
 
-        // 3. 파일명 생성 (요청하신 YYMMDD 형식)
         const now = new Date();
         const yy = String(now.getFullYear()).slice(-2);
         const mm = String(now.getMonth() + 1).padStart(2, '0');
         const dd = String(now.getDate()).padStart(2, '0');
-        const hh = String(now.getHours()).padStart(2, '0');
-        const min = String(now.getMinutes()).padStart(2, '0');
-        const fileName = `인생네컷_${yy}${mm}${dd}_${hh}${min}.png`;
+        const fileName = `Life4Cut_${yy}${mm}${dd}.png`;
 
-        // 4. 가상 링크 생성 및 다운로드 실행
         const link = document.createElement('a');
         link.href = url;
         link.download = fileName;
+        
+        // iOS에서 중앙 팝업을 트리거하기 위한 필수 단계
         document.body.appendChild(link);
         link.click();
         
-        // 5. 정리
         setTimeout(() => {
             document.body.removeChild(link);
-            window.URL.revokeObjectURL(url); // 메모리 해제
-            btn.innerText = originalText;
-            btn.disabled = false;
-        }, 100);
+            window.URL.revokeObjectURL(url);
+            saveBtn.disabled = false;
+        }, 500);
 
     } catch (error) {
-        console.error("저장 실패:", error);
-        alert("저장 중 오류가 발생했습니다.");
-        btn.innerText = originalText;
-        btn.disabled = false;
+        console.error("저장 오류:", error);
+        saveBtn.disabled = false;
     }
 }
 
