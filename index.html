@@ -723,10 +723,11 @@
     </div>
 
     
-    <div id="video-container">
-        <button class="action-button-base home-button-camera" onclick="stopCameraAndGoHome()">
-            ⬅️
-        </button>
+        <div id="video-container">
+            <button class="action-button-base home-button-camera" onclick="goToHome()">
+                ⬅️
+            </button>
+        </div>
 
         <video id="video" autoplay playsinline muted></video>
         <div id="timer"></div>
@@ -920,46 +921,28 @@
 
         // --- 네비게이션 함수 ---
 function goToHome() {
-    // 1. 모든 단계를 확실하게 숨김 처리 (중첩 방지)
-    const allSteps = document.querySelectorAll('.step');
-    allSteps.forEach(step => {
-        step.style.display = 'none';      // 일단 다 끄기
-        step.classList.remove('active');  // active 클래스가 있다면 제거
-    });
+    // 카메라가 켜져 있다면 여기서 끕니다.
+    if (typeof videoStream !== 'undefined' && videoStream) {
+        videoStream.getTracks().forEach(track => track.stop());
+        videoStream = null;
+    }
 
-    // 2. 시작 화면만 다시 띄우기
+    // 화면 전환 로직
+    document.querySelectorAll('.step').forEach(step => {
+        step.style.display = 'none';
+    });
+    document.getElementById('step-start').style.display = 'flex';
+
+    // 3. 시작 화면만 표시 (인터넷 접속 시도 안 함)
     const startStep = document.getElementById('step-start');
     if (startStep) {
-        startStep.style.display = 'flex'; // 시작 화면만 켜기
+        startStep.style.display = 'flex';
     }
 
-    // 3. 사진 데이터 및 UI 상태 초기화
+    // 4. 데이터 초기화
     capturedImages = []; 
     finalImageDataURL = null;
-
-    // 4. 결과 이미지 태그 비우기 (잔상 제거)
-    const resultImg = document.getElementById('result-image');
-    if (resultImg) resultImg.src = '';
-
-    // 5. 저장 버튼 상태 복구
-    const saveBtn = document.getElementById('combined-save-btn');
-    if (saveBtn) {
-        saveBtn.innerText = "📸 사진 저장 (앨범/파일)";
-        saveBtn.style.backgroundColor = "#2ecc71"; // 민트색 복구
-        saveBtn.disabled = false;
-    }
-    
-    // 6. 페이지 상단으로 스크롤 이동 (혹시 모를 밀림 방지)
-    window.scrollTo(0, 0);
 }
-
-        // 🟢 [추가] 카메라 단계에서 홈으로 돌아가는 함수
-        function stopCameraAndGoHome() {
-            if (videoStream) {
-                videoStream.getTracks().forEach(track => track.stop());
-            }
-            goToHome();
-        }
 
         function setHomeButtonActive(isActive) {
             const titleEl = document.getElementById('app-title');
