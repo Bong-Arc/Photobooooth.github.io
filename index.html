@@ -102,7 +102,7 @@
         #main-content-container {
             width: 90%;
             max-width: 1000px; /* 태블릿 환경 고려 */
-            padding: 40px 10px 10px 10px; 
+            padding: 40px 40px 10px 10px; 
             
             /* 스크롤 관련 유지 */
             max-height: 100vh; 
@@ -781,6 +781,8 @@
                     <span style="font-size: 1.2em; margin-right: 8px;">📤</span> 공유하기
                 </button>
             </div>
+
+            <h2 style="color:#7b7979; margin-top:0; font-size: 0.8em">저장된 사진은 <b>파일</b>앱의 다운로드에서 확인해주세요.</h2>
     
             <div class="result-nav-container">
             </div>
@@ -1662,61 +1664,70 @@ for (let c = timerSeconds; c > 0; c--) {
         }
 
         // 🟢 [추가] 도움말 모달 제어 함수
-function toggleHelpModal(show) {
-    const modal = document.getElementById('help-modal');
-    modal.style.display = show ? 'flex' : 'none';
-}
+        function toggleHelpModal(show) {
+            const modal = document.getElementById('help-modal');
+            modal.style.display = show ? 'flex' : 'none';
+        }   
 
         // 🚨 주의: 이 기능은 HTTPS 환경(실제 웹사이트)에서만 정상 작동합니다.
-// 1. [추가] 즉시 저장 함수 (사진첩/다운로드 폴더로 바로 전송)
-function saveDirectly() {
-    if (!finalImageDataURL) {
-        alert("이미지 데이터가 준비되지 않았습니다.");
-        return;
-    }
+        // 1. [추가] 즉시 저장 함수 (사진첩/다운로드 폴더로 바로 전송)
+        function saveDirectly() {
+            if (!finalImageDataURL) {
+                alert("이미지 데이터가 준비되지 않았습니다. 다시 시도해 주세요.");
+                return;
+            }
 
-    const now = new Date();
-    const fileName = `Life4Cut_${now.getTime()}.png`;
+            // 1. 날짜와 시간을 구합니다 (중복 방지용)
+            const now = new Date();
+            // 연도 끝 2자리, 월, 일 계산
+            const yy = String(now.getFullYear()).slice(-2); // 2024 -> 24
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = String(now.getMinutes()).padStart(2, '0');
 
-    const link = document.createElement('a');
-    link.href = finalImageDataURL;
-    link.download = fileName;
+            // 240520_1430 형식으로 날짜 생성
+            const dateStr = `${yy}${mm}${dd}_${hh}${min}`;
+
+            // 파일명 설정 (앞에 원하는 이름을 넣으세요)
+            const fileName = `Life4Cut_${dateStr}.png`;
+
+            const link = document.createElement('a');
+            link.href = finalImageDataURL;
+            link.download = fileName;
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 2. [유지] 기존 공유하기 함수 (공유 시트 호출)
+        async function downloadAndShare() {
+            if (!finalImageDataURL) {
+                alert("이미지 데이터가 준비되지 않았습니다.");
+                return;
+            }
     
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    // 안내 문구 (iOS 배려)
-    alert("사진 저장을 저장했습니다.\n'파일' 앱의 다운로드 항목을 확인해주세요");
-}
+            if (navigator.share) {
+                try {
+                    const response = await fetch(finalImageDataURL);
+                    const blob = await response.blob();
+                    const file = new File([blob], "InsaengNekot.png", { type: 'image/png' });
 
-// 2. [유지] 기존 공유하기 함수 (공유 시트 호출)
-async function downloadAndShare() {
-    if (!finalImageDataURL) {
-        alert("이미지 데이터가 준비되지 않았습니다.");
-        return;
-    }
-    
-    if (navigator.share) {
-        try {
-            const response = await fetch(finalImageDataURL);
-            const blob = await response.blob();
-            const file = new File([blob], "InsaengNekot.png", { type: 'image/png' });
-
-            await navigator.share({
-                title: '인생네컷!',
-                text: shareMessage,
-                files: [file],
-            });
-        } catch (error) {
-            if (error.name !== 'AbortError') {
-                alert(`공유 실패: ${error.message}`);
+                    await navigator.share({
+                        title: '인생네컷!',
+                        text: shareMessage,
+                        files: [file],
+                    });
+                } catch (error) {
+                    if (error.name !== 'AbortError') {
+                        alert(`공유 실패: ${error.message}`);
+                    }
+                }
+            } else {
+                alert("이 브라우저는 공유 기능을 지원하지 않습니다. 이미지를 길게 눌러 저장해 주세요.");
             }
         }
-    } else {
-        alert("이 브라우저는 공유 기능을 지원하지 않습니다. 이미지를 길게 눌러 저장해 주세요.");
-    }
-}
 
         async function updatePreview(canvasId) {
             await drawComposite(canvasId); 
