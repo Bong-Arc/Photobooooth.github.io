@@ -805,13 +805,14 @@
     
     <script>
         // 서비스 워커 등록 (오프라인 구동용)
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then(reg => console.log('서비스 워커 등록 완료!'))
-                    .catch(err => console.log('서비스 워커 등록 실패:', err));
-            });
-        }
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        // './sw.js' 앞의 점(.)이 중요합니다. 현재 폴더 기준이라는 뜻입니다.
+        navigator.serviceWorker.register('./sw.js')
+            .then(reg => console.log('서비스 워커 등록 완료'))
+            .catch(err => console.log('등록 실패:', err));
+    });
+}
 
         let videoStream;
         const video = document.getElementById('video');
