@@ -671,7 +671,8 @@
                 <p>2. <b>타이머</b>는 기본 5초로 작동합니다. </p>
                 <p>3. <b>공유 메세지</b>는 공유 시트를 통한 메세지 전달 시 적용됩니다.</p>
                 <p> <b>📸 어플 실행</b> </p>
-                <p>1. 오른쪽 상단에 <b>공유하기 -> 홈화면에 추가</b>를 누르시면 어플처럼 사용이 가능합니다.</p>
+                <p>1. 오른쪽 상단에 <b>공유하기 -> 홈 화면에 추가</b>를 누르시면 어플처럼 사용이 가능합니다.</p>
+                <p>('홈 화면에 추가'모드로 작동 시 오프라인으로 작동이 가능하나 외부 공유 시에는 온라인 연결이 필요합니다.)</p>
                 <p>2. 사진은 <b>총 6장</b>이 촬영됩니다.</p>
                 <p>3. 촬영된 6장 중 <b>4장</b>을 골라주세요.</p>
                 <p>4. 원하는 디자인의 <b>프레임</b>을 선택합니다.</p>
@@ -919,13 +920,19 @@
 
         // --- 네비게이션 함수 ---
         function goToHome() {
-            // 🚨 [주의] 홈 복귀 전 사용자에게 확인 메시지 띄우기
-            const confirmed = confirm("촬영된 인생4컷이 초기화됩니다.");
-            
-            if (confirmed) {
-                location.reload(); // 동의하면 앱을 초기 상태로 리로드
-            } 
-            // 취소하면 현재 페이지에 남아있게 됩니다.
+            // 1. 모든 단계(step)를 숨기고 시작 단계만 표시
+            document.querySelectorAll('.step').forEach(step => {
+                step.style.display = 'none';
+            });
+            document.getElementById('step-start').style.display = 'flex';
+
+            // 2. 촬영 데이터 초기화
+            capturedImages = []; // 촬영된 이미지 배열 비우기
+            finalImageDataURL = null; // 생성된 최종 이미지 삭제
+    
+            // 3. 결과 화면의 이미지 요소 비우기
+            const resultImage = document.getElementById('result-image');
+            if (resultImage) resultImage.src = '';
         }
 
         // 🟢 [추가] 카메라 단계에서 홈으로 돌아가는 함수
