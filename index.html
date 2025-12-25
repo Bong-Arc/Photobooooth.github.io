@@ -804,6 +804,15 @@
     </div>
     
     <script>
+        // 서비스 워커 등록 (오프라인 구동용)
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('서비스 워커 등록 완료!'))
+                    .catch(err => console.log('서비스 워커 등록 실패:', err));
+            });
+        }
+
         let videoStream;
         const video = document.getElementById('video');
         const photos = []; // 촬영된 6장의 사진 (DataURL)
@@ -1010,7 +1019,7 @@
         const canvas = document.getElementById('final-canvas');
         await drawComposite('final-canvas'); 
 
-        // PNG에서 JPEG로 변경 (화질 0.9 설정)
+        // PNG에서 JPEG로 변경 
         finalImageDataURL = canvas.toDataURL('image/jpeg');
 
         const imgEl = document.getElementById('final-image-for-save');
@@ -1751,21 +1760,6 @@
             await drawComposite(canvasId); 
         }
 
-        // 1. 서비스 워커(오프라인 저장소) 자동 생성 및 등록
-        if ('serviceWorker' in navigator) {
-            const swCode = `
-                const CACHE_NAME = 'cam-cache-v1';
-                self.addEventListener('install', e => {
-                    e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(['./', 'index.html'])));
-                });
-                self.addEventListener('fetch', e => {
-                    e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
-                });
-            `;
-            const blob = new Blob([swCode], {type: 'text/javascript'});
-            const swUrl = URL.createObjectURL(blob);
-            navigator.serviceWorker.register(swUrl);
-        }
     </script>
 </body>
 </html>
