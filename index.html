@@ -641,8 +641,6 @@
         사진 부스 준비 중...
     </div>
 
-    <body onload="initCamera()">
-
     <h1 id="app-title">인생네컷</h1> 
 
     <div id="step-start" style="display: flex;">
@@ -730,6 +728,14 @@
     </div>
 
     
+    <div id="camera-loading" style="
+    display: none; 
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+    background: #000; z-index: 1000; 
+    flex-direction: column; justify-content: center; align-items: center;">
+    <div class="spinner"></div> <p style="color: white; margin-top: 20px; font-size: 1.2em;">카메라를 연결 중입니다...</p>
+</div>
+
     <div id="video-container">
         <button class="action-button-base home-button-camera" onclick="stopCameraAndGoHome()">
             ⬅️
@@ -806,7 +812,6 @@
     </div>
     
     <script>
-        let stream = null;
         let videoStream;
         const video = document.getElementById('video');
         const photos = []; // 촬영된 6장의 사진 (DataURL)
@@ -831,29 +836,6 @@
             }
             return new Blob([u8arr], {type:mime});
         }
-
-        // [수정] 페이지 로드 시 즉시 카메라 구동
-        async function initCamera() {
-    const video = document.getElementById('video');
-    try {
-        stream = await navigator.mediaDevices.getUserMedia({
-            video: {
-                facingMode: 'user',
-                width: { ideal: 1280 },
-                height: { ideal: 720 }
-            },
-            audio: false
-        });
-        video.srcObject = stream;
-        // 미리보기 시작 (화면은 아직 display:none 상태여도 내부적으로 구동됨)
-        await video.play();
-        console.log("카메라 미리 준비 완료");
-    } catch (err) {
-        console.error("카메라 접근 오류:", err);
-        // 권한 거부 시 사용자에게 알림
-        alert("카메라 권한이 필요합니다. 브라우저 설정을 확인해주세요.");
-    }
-}
         
         
        // --- 초기화 및 앱 시작 ---
@@ -1226,10 +1208,10 @@
 
         // --- 2단계: 카메라 촬영 로직 (가장 안정적인 코드로 복구 및 수정) ---
         async function startCamera() {
-            if (!selectedFrameId) {
-                alert("사용할 프레임을 먼저 등록하거나 선택해주세요!");
-                return;
-            }
+
+            // 1. 로딩 화면 표시
+            const loadingEl = document.getElementById('camera-loading');
+            loadingEl.style.display = 'flex';
 
             // 카메라 화면 활성화
             document.getElementById('step-start').style.display = 'none';
@@ -1247,30 +1229,30 @@
             // 카메라 사용 권한 요청 및 스트림 설정
             try {
                 // 🔴 [수정] 고화질 스트림을 요청하는 제약 조건 추가 (Full HD급)
-                const constraints = { 
+                    videoStream = await navigator.mediaDevices.getUserMedia({
                     video: {
+                        facingMode: 'user',
                         // 최소 해상도 요청 (iPad/아이폰에서 안정적인 Full HD급: 1920x1440 비율)
                         width: { ideal: 1920 },
                         height: { ideal: 1440 }
                     }, 
                     audio: false 
-                };
+                });
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoStream = stream;
                 video.srcObject = stream;
 
-                // 🟢 [개선] 비디오가 실제로 재생될 때까지 대기하는 Promise
-                await new Promise((resolve) => {
-                    video.onplaying = resolve;
-                });
-                
-                // 비디오 준비 완료 시 재생
+                // 3. 비디오가 실제로 재생될 때까지 대기 (가장 중요한 부분)
                 video.onloadedmetadata = () => {
-                    video.play();
-                };
-
-                // 촬영 버튼에 시퀀스 연결
-                document.getElementById('shoot-btn').onclick = startShootingSequence;
+                    video.play().then(() => {
+                // 4. 재생이 시작되면 화면 전환 및 로딩창 제거
+                loadingEl.style.display = 'none'; // 로딩창 숨김
+                document.getElementById('step-start').style.display = 'none';
+                document.getElementById('video-container').style.display = 'block';
+                // 촬영 시퀀스 시작
+                startShootingSequence();
+            });
+        };
                 
             } catch (err) {
                 console.error("카메라 접근 오류: ", err);
@@ -1287,10 +1269,6 @@
         async function startShootingSequence() {
             // 촬영 시작 시 메시지 숨기기
             document.getElementById('shoot-msg').style.display = 'none'; 
-
-            // 이미 카메라가 구동 중이므로 화면만 즉시 보여줌
-            document.getElementById('start-screen').style.display = 'none';
-            document.getElementById('camera-screen').style.display = 'flex';
             
             document.getElementById('shoot-btn').style.display = 'none';
             const timerEl = document.getElementById('timer');
@@ -1319,6 +1297,7 @@
                // 🌟 [핵심 수정] 50ms 대기: 브라우저가 흰색 플래시를 화면에 그릴 시간을 확보
                await new Promise(r => setTimeout(r, 50)); 
 
+
                 // 1. 플래시 효과 실행
                 flashEffect();
         
@@ -1337,14 +1316,6 @@
             shotCountEl.style.display = 'none';
             stopCamera();
             showGallery();
-            // [유지] 카메라 종료 함수
-            function stopCamera() {
-                if (stream) {
-                    stream.getTracks().forEach(track => track.stop());
-                    stream = null;
-                    console.log("카메라가 종료되었습니다.");
-                }       
-            }
         }
 
         // 🟢 [핵심 수정] 플래시 효과가 비디오 위에 확실히 나타나도록 #video-container 내부에 추가
