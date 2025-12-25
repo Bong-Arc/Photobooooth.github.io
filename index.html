@@ -675,13 +675,14 @@
                 <p>2. <b>타이머</b>는 기본 5초로 작동하며 변경된 타이머는 프로그램을 끄면 초기화됩니다. </p>
                 <p>3. <b>공유 메세지</b>는 공유 시트를 통한 메세지 전달 시 적용됩니다.</p>
                 <p> <b>📸 어플 실행</b> </p>
-                <p>1. 오른쪽 상단에 <b>공유하기 -> 홈 화면에 추가</b>를 누르시면 어플처럼 사용이 가능합니다.</p>
+                <p>1. 설정->사파리->카메라->권한 허용을 해주셔야 카메라가 작동됩니다.</p>
+                <p>2. 오른쪽 상단에 <b>공유하기 -> 홈 화면에 추가</b>를 누르시면 어플처럼 사용이 가능합니다.</p>
                 <p>('홈 화면에 추가'모드로 작동 시 오프라인도 가능하나, 외부 공유 시에는 온라인 연결이 필요합니다.)</p>
-                <p>2. 사진은 <b>총 6장</b>이 촬영됩니다.</p>
-                <p>3. 촬영된 6장 중 <b>4장</b>을 골라주세요.</p>
-                <p>4. 원하는 디자인의 <b>프레임</b>을 선택합니다.</p>
-                <p>5. 완성된 사진을 <b>저장</b>하거나 <b>공유</b>하세요!</p>
-                <p>6. <b>공유하기 버튼을 통한 메세지 전달 시</b> 관리자 모드에서 작성한 글이 함께 전송됩니다.</p>
+                <p>3. 사진은 <b>총 6장</b>이 촬영됩니다.</p>
+                <p>4. 촬영된 6장 중 <b>4장</b>을 골라주세요.</p>
+                <p>5. 원하는 디자인의 <b>프레임</b>을 선택합니다.</p>
+                <p>6. 완성된 사진을 <b>저장</b>하거나 <b>공유</b>하세요!</p>
+                <p>7. <b>공유하기 버튼을 통한 메세지 전달 시</b> 관리자 모드에서 작성한 글이 함께 전송됩니다.</p>
                 <div style="text-align: center; margin-top: 20px;">
                     <button onclick="toggleHelpModal(false)" style="background:#ff6b81; width:30%; font-weight: bold; padding: 15px; border-radius: 30px;">확인</button>
                 </div>
@@ -786,7 +787,7 @@
             </button>
         </div>
 
-            <h2 style="color:#7b7979; margin-top: 10px; font-size: 0.8em">이미지 저장 혹은 공유하기를 사용하여 추억을 간직하세요❣️</h2>
+            <h2 style="color:#7b7979; margin-top: 10px; font-size: 0.8em">이미지 저장 혹은 공유하기를 클릭하여 추억을 간직하세요❣️</h2>
     
             <div class="result-nav-container">
             </div>
@@ -1006,16 +1007,16 @@
             document.getElementById('step-edit').style.display = 'none';
             document.getElementById('result-container').style.display = 'block';
 
-            const canvas = document.getElementById('final-canvas');
-            await drawComposite('final-canvas'); 
+        const canvas = document.getElementById('final-canvas');
+        await drawComposite('final-canvas'); 
 
-            finalImageDataURL = canvas.toDataURL('image/png'); 
+        // PNG에서 JPEG로 변경 (화질 0.9 설정)
+        finalImageDataURL = canvas.toDataURL('image/jpeg');
 
-            // 캔버스 숨기고 <img> 태그에 이미지 데이터 할당 (꾹 눌러 저장 활성화)
-            const imgEl = document.getElementById('final-image-for-save');
-            imgEl.src = finalImageDataURL; 
-            imgEl.style.display = 'block'; 
-            canvas.style.display = 'none'; 
+        const imgEl = document.getElementById('final-image-for-save');
+        imgEl.src = finalImageDataURL; 
+        imgEl.style.display = 'block'; 
+        canvas.style.display = 'none';
 
             // [버그 수정]: 존재하지 않는 'save-and-stay-btn' 대신 실제 버튼 표시
             const saveBtn = document.getElementById('combined-save-btn');
@@ -1358,7 +1359,7 @@
 
            // 2. 최종 네컷의 한 컷 목표 크기: 1350px X 1800px (3:4 비율)
            //    -> 최종 합성 캔버스에서 한 컷의 크기(1350x1800)와 동일하게 설정하여 확대 방지
-           const targetWidth = 1350; // ⬅️ 수정: 450 -> 1350
+            const targetWidth = 1350; // ⬅️ 수정: 450 -> 1350
             const targetHeight = 1800; // ⬅️ 수정: 600 -> 1800
             const targetRatio = targetWidth / targetHeight; // 0.75
 
@@ -1399,8 +1400,8 @@
                targetHeight  
            );
 
-           // 6. 최종적으로 크롭 및 캡처된 고화질 dataURL 저장 (PNG 무손실 압축으로 변경)
-            photos.push(finalPhotoCanvas.toDataURL('image/png')); // ⬅️ 수정: 'image/jpeg', 0.95 -> 'image/png'
+           // 6. 최종적으로 크롭 및 캡처된 고화질 dataURL 저장
+            photos.push(finalPhotoCanvas.toDataURL('image/jpeg'));
         }              
 
         // [추가] 첫 번째 사진의 딜레이를 줄이기 위한 사전 준비 함수
@@ -1695,7 +1696,7 @@
                 return;
             }
 
-        const btn = document.getElementById('combined-save-btn');
+            const btn = document.getElementById('combined-save-btn');
             const originalText = btn.innerText;
             const originalColor = btn.style.backgroundColor; // 원래 색상 저장
 
@@ -1707,7 +1708,7 @@
 
             try {
                 // 1. 이미지 데이터를 Blob으로 변환
-               const response = await fetch(finalImageDataURL);
+                const response = await fetch(finalImageDataURL);
                 const blob = await response.blob();
         
                 // 2. 날짜 생성 (240520 형식)
@@ -1715,10 +1716,10 @@
                 const yy = String(now.getFullYear()).slice(-2);
                 const mm = String(now.getMonth() + 1).padStart(2, '0');
                 const dd = String(now.getDate()).padStart(2, '0');
-                const fileName = `인생네컷_${yy}${mm}${dd}.png`;
+                const fileName = `인생네컷_${yy}${mm}${dd}.jpg`;
 
                // 3. 파일 객체 생성 (공유용)
-               const file = new File([blob], fileName, { type: 'image/png' });
+               const file = new File([blob], fileName, { type: 'image/jpeg' });
 
                 // 4. iOS/Android 시스템 공유 시트 호출
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
@@ -1727,13 +1728,13 @@
                         title: shareMessage
                     });
                 } else {
-                    // 공유 기능을 지원하지 않는 브라우저일 경우 강제 다운로드
-                    const url = window.URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = fileName;
-                    link.click();
-                    window.URL.revokeObjectURL(url);
+                // 다운로드 로직은 위에서 생성한 fileName과 blob을 그대로 사용하여 작동함
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                link.click();
+                window.URL.revokeObjectURL(url);
                 }
             } catch (error) {
                 console.log("저장 취소 또는 오류 발생:", error);
@@ -1748,6 +1749,22 @@
 
         async function updatePreview(canvasId) {
             await drawComposite(canvasId); 
+        }
+
+        // 1. 서비스 워커(오프라인 저장소) 자동 생성 및 등록
+        if ('serviceWorker' in navigator) {
+            const swCode = `
+                const CACHE_NAME = 'cam-cache-v1';
+                self.addEventListener('install', e => {
+                    e.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(['./', 'index.html'])));
+                });
+                self.addEventListener('fetch', e => {
+                    e.respondWith(caches.match(e.request).then(res => res || fetch(e.request)));
+                });
+            `;
+            const blob = new Blob([swCode], {type: 'text/javascript'});
+            const swUrl = URL.createObjectURL(blob);
+            navigator.serviceWorker.register(swUrl);
         }
     </script>
 </body>
