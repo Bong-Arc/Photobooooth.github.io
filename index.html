@@ -661,6 +661,10 @@
             <button id="start-shoot-btn" disabled style="width: 100%; height: 65px; font-size: 22px; margin: 0;">
                 📸 촬영하기
             </button>
+
+            <p id="frame-notice" style="color:#7b7979; margin-top: 10px; font-size: 0.8em">
+            ⚠️ 관리자 모드 프레임을 먼저 선택해주세요!
+            </p>
         </div>
 
         <div id="help-modal" style="display:none; position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:1100; justify-content:center; align-items:center;">
@@ -668,7 +672,7 @@
                 <h2 style="color:#00d2d3; margin-top:0; text-align:center;">📸 사용 방법</h2>
                 <p> <b>⚙️ 관리자 모드</b> </p>
                 <p>1. 사진첩에 있는 <b>프레임을 직접 추가</b>해주세요. (프레임은 PNG 파일을 사용해주세요.)</p>
-                <p>2. <b>타이머</b>는 기본 5초로 작동합니다. </p>
+                <p>2. <b>타이머</b>는 기본 5초로 작동하며 변경된 타이머는 프로그램을 끄면 초기화됩니다. </p>
                 <p>3. <b>공유 메세지</b>는 공유 시트를 통한 메세지 전달 시 적용됩니다.</p>
                 <p> <b>📸 어플 실행</b> </p>
                 <p>1. 오른쪽 상단에 <b>공유하기 -> 홈 화면에 추가</b>를 누르시면 어플처럼 사용이 가능합니다.</p>
@@ -999,25 +1003,27 @@
 
         // 5단계 결과 화면으로 이동 (최종 합성 이미지 생성 및 표시)
         async function createComposite() {
-           document.getElementById('step-edit').style.display = 'none';
-           document.getElementById('result-container').style.display = 'block';
+            document.getElementById('step-edit').style.display = 'none';
+            document.getElementById('result-container').style.display = 'block';
 
-          const canvas = document.getElementById('final-canvas');
-          await drawComposite('final-canvas'); 
+            const canvas = document.getElementById('final-canvas');
+            await drawComposite('final-canvas'); 
 
-          // Data URL만 생성합니다.
-          finalImageDataURL = canvas.toDataURL('image/png'); 
+            finalImageDataURL = canvas.toDataURL('image/png'); 
 
-           // 1. 캔버스 숨기고 <img> 태그에 이미지 데이터 할당 (꾹 눌러 저장 활성화)
-           const imgEl = document.getElementById('final-image-for-save');
-           imgEl.src = finalImageDataURL; 
-           imgEl.style.display = 'block'; 
-          canvas.style.display = 'none'; // 캔버스 숨김
+            // 캔버스 숨기고 <img> 태그에 이미지 데이터 할당 (꾹 눌러 저장 활성화)
+            const imgEl = document.getElementById('final-image-for-save');
+            imgEl.src = finalImageDataURL; 
+            imgEl.style.display = 'block'; 
+            canvas.style.display = 'none'; 
 
-          // 🟢 [수정] QR 코드 관련 코드를 삭제하고, '공유/전송하기' 버튼을 바로 표시합니다.
-          document.getElementById('save-and-stay-btn').style.display = 'block'; 
+            // [버그 수정]: 존재하지 않는 'save-and-stay-btn' 대신 실제 버튼 표시
+            const saveBtn = document.getElementById('combined-save-btn');
+            if (saveBtn) {
+                saveBtn.style.display = 'block'; 
+            }
 
-          setHomeButtonActive(true); 
+            setHomeButtonActive(true); 
         }
         
 
@@ -1094,39 +1100,37 @@
         }
 
         // 관리자 모드 열기/닫기 및 문구 저장 로직
-// toggleAdminMode 함수 내 저장 로직 수정
-function toggleAdminMode(show) {
-    const modal = document.getElementById('admin-modal');
-    modal.style.display = show ? 'flex' : 'none';
-    
-    if (!show) {
-        // 닫을 때 현재 선택된 timerSeconds를 로컬 스토리지에 저장
-        localStorage.setItem('customTimerSeconds', timerSeconds);
+        // toggleAdminMode 함수 내 저장 로직 수정
+        function toggleAdminMode(show) {
+            const modal = document.getElementById('admin-modal');
+            modal.style.display = show ? 'flex' : 'none';
 
-        const inputMsg = document.getElementById('share-message-input').value;
-        if(inputMsg) {
-            shareMessage = inputMsg;
-            localStorage.setItem('customShareMessage', inputMsg);
+            if (!show) {
+                // 공유 메시지 저장
+                const inputMsg = document.getElementById('share-message-input').value;
+                if (inputMsg) {
+                    shareMessage = inputMsg;
+                    localStorage.setItem('customShareMessage', inputMsg);
+                }
+                renderStartFrameGallery(); 
+            }
         }
-        renderStartFrameGallery(); 
-    }
-}
 
-window.addEventListener('load', () => {
-    // 공유 메시지 로드
-    const savedMsg = localStorage.getItem('customShareMessage');
-    if (savedMsg) {
-        shareMessage = savedMsg;
-        document.getElementById('share-message-input').value = shareMessage;
-    }
+        window.addEventListener('load', () => {
+            // 공유 메시지 로드
+            const savedMsg = localStorage.getItem('customShareMessage');
+            if (savedMsg) {
+               shareMessage = savedMsg;
+               document.getElementById('share-message-input').value = shareMessage;
+            }
 
-    // 타이머 값 로드 및 버튼 초기화
-    const savedTimer = localStorage.getItem('customTimerSeconds');
-    if (savedTimer) {
-        timerSeconds = parseInt(savedTimer);
-    }
-    updateTimerButtons(timerSeconds); // 저장된 값에 맞춰 버튼 색상 변경
-});
+            // 타이머 값 로드 및 버튼 초기화
+            const savedTimer = localStorage.getItem('customTimerSeconds');
+            if (savedTimer) {
+                timerSeconds = parseInt(savedTimer);
+            }
+            updateTimerButtons(timerSeconds); // 저장된 값에 맞춰 버튼 색상 변경
+        });
         // ------------------------------------
         // 🟢 [최종 교체] 프레임 파일 업로드 처리 (진단 및 안정화 로직)
         // ------------------------------------
@@ -1227,6 +1231,11 @@ window.addEventListener('load', () => {
                 const stream = await navigator.mediaDevices.getUserMedia(constraints);
                 videoStream = stream;
                 video.srcObject = stream;
+
+                // 🟢 [개선] 비디오가 실제로 재생될 때까지 대기하는 Promise
+                await new Promise((resolve) => {
+                    video.onplaying = resolve;
+                });
                 
                 // 비디오 준비 완료 시 재생
                 video.onloadedmetadata = () => {
@@ -1266,11 +1275,11 @@ window.addEventListener('load', () => {
                 currentShot = i;
                 shotCountEl.innerText = `${currentShot} / 6`;
 
-// 🔥 수정된 부분: timerSeconds 변수를 사용하여 카운트다운
-for (let c = timerSeconds; c > 0; c--) {
-    timerEl.innerText = c;
-    await new Promise(r => setTimeout(r, 1000));
-}
+            // 🔥 수정된 부분: timerSeconds 변수를 사용하여 카운트다운
+            for (let c = timerSeconds; c > 0; c--) {
+                timerEl.innerText = c;
+                await new Promise(r => setTimeout(r, 1000));
+            }
         
                timerEl.innerText = "📸";
                flashEffect();
@@ -1279,9 +1288,19 @@ for (let c = timerSeconds; c > 0; c--) {
                await new Promise(r => setTimeout(r, 50)); 
         
               capturePhoto();
+
+                // 1. 플래시 효과 실행
+                flashEffect();
+        
+                // 2. 찰나의 대기 (브라우저가 흰색 화면을 렌더링할 시간)
+                await new Promise(r => requestAnimationFrame(() => r())); 
+        
+                // 3. 즉시 캡처
+                capturePhoto();
         
               // 사진 간 간격 (총 550ms 대기)
               await new Promise(r => setTimeout(r, 500)); 
+
            }
 
             timerEl.style.display = 'none';
@@ -1695,8 +1714,8 @@ for (let c = timerSeconds; c > 0; c--) {
                 const now = new Date();
                 const yy = String(now.getFullYear()).slice(-2);
                 const mm = String(now.getMonth() + 1).padStart(2, '0');
-               const dd = String(now.getDate()).padStart(2, '0');
-               const fileName = `Life4Cut_${yy}${mm}${dd}.png`;
+                const dd = String(now.getDate()).padStart(2, '0');
+                const fileName = `인생네컷_${yy}${mm}${dd}.png`;
 
                // 3. 파일 객체 생성 (공유용)
                const file = new File([blob], fileName, { type: 'image/png' });
@@ -1705,7 +1724,7 @@ for (let c = timerSeconds; c > 0; c--) {
                 if (navigator.canShare && navigator.canShare({ files: [file] })) {
                     await navigator.share({
                         files: [file],
-                        title: '인생네컷 저장 및 공유'
+                        title: shareMessage
                     });
                 } else {
                     // 공유 기능을 지원하지 않는 브라우저일 경우 강제 다운로드
