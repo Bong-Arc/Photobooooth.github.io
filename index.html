@@ -668,16 +668,16 @@
             <div style="background:#333; width:85%; max-width:600px; padding:25px; border-radius:20px; text-align:left; line-height: 1.6;">
                 <h2 style="color:#00d2d3; margin-top:0; text-align:center;">📸 사용 방법</h2>
                 <p> <b>⚙️ 관리자 모드</b> </p>
-                <p>1. 사진첩에 있는 <b>프레임을 직접 추가</b>해주세요. </p>
-                <p>   (프레임은 PNG 파일을 사용해주세요.)</p>
+                <p>1. 사진첩에 있는 <b>프레임을 직접 추가</b>해주세요. (프레임은 PNG 파일을 사용해주세요.)</p>
                 <p>2. <b>타이머</b>는 기본 5초로 작동합니다. </p>
                 <p>3. <b>공유 메세지</b>는 공유 시트를 통한 메세지 전달 시 적용됩니다.</p>
                 <p> <b>📸 어플 실행</b> </p>
-                <p>1. 사진은 <b>총 6장</b>이 촬영됩니다.</p>
-                <p>2. 촬영된 6장 중 <b>4장</b>을 골라주세요.</p>
-                <p>3. 원하는 디자인의 <b>프레임</b>을 선택합니다.</p>
-                <p>4. 완성된 사진을 <b>저장</b>하거나 <b>공유</b>하세요!</p>
-                <p>5. <b>공유하기 버튼을 통한 메세지 전달 시</b> 관리자 모드에서 작성한 글이 함께 전송됩니다.</p>
+                <p>1. 오른쪽 상단에 공유하기 -> 홈화면에 추가를 누르시면 어플처럼 사용이 가능합니다.</p>
+                <p>2. 사진은 <b>총 6장</b>이 촬영됩니다.</p>
+                <p>3. 촬영된 6장 중 <b>4장</b>을 골라주세요.</p>
+                <p>4. 원하는 디자인의 <b>프레임</b>을 선택합니다.</p>
+                <p>5. 완성된 사진을 <b>저장</b>하거나 <b>공유</b>하세요!</p>
+                <p>6. <b>공유하기 버튼을 통한 메세지 전달 시</b> 관리자 모드에서 작성한 글이 함께 전송됩니다.</p>
                 <div style="text-align: center; margin-top: 20px;">
                     <button onclick="toggleHelpModal(false)" style="background:#ff6b81; width:30%; font-weight: bold; padding: 15px; border-radius: 30px;">확인</button>
                 </div>
@@ -1675,35 +1675,55 @@ for (let c = timerSeconds; c > 0; c--) {
 
         // 🚨 주의: 이 기능은 HTTPS 환경(실제 웹사이트)에서만 정상 작동합니다.
         // 1. [추가] 즉시 저장 함수 (사진첩/다운로드 폴더로 바로 전송)
-        function saveDirectly() {
-            if (!finalImageDataURL) {
-                alert("이미지 데이터가 준비되지 않았습니다. 다시 시도해 주세요.");
-                return;
-            }
+async function saveDirectly() {
+    if (!finalImageDataURL) {
+        alert("이미지 데이터가 준비되지 않았습니다. 다시 시도해 주세요.");
+        return;
+    }
 
-            // 1. 날짜와 시간을 구합니다 (중복 방지용)
-            const now = new Date();
-            // 연도 끝 2자리, 월, 일 계산
-            const yy = String(now.getFullYear()).slice(-2); // 2024 -> 24
-            const mm = String(now.getMonth() + 1).padStart(2, '0');
-            const dd = String(now.getDate()).padStart(2, '0');
-            const hh = String(now.getHours()).padStart(2, '0');
-            const min = String(now.getMinutes()).padStart(2, '0');
+    // 1. 버튼 여러 번 눌리는 것 방지
+    const btn = document.getElementById('direct-save-btn');
+    const originalText = btn.innerText;
+    btn.innerText = "⏳ 처리 중...";
+    btn.disabled = true;
 
-            // 240520_1430 형식으로 날짜 생성
-            const dateStr = `${yy}${mm}${dd}_${hh}${min}`;
+    try {
+        // 2. DataURL을 Blob 객체로 변환 (iOS 대용량 처리 핵심)
+        const response = await fetch(finalImageDataURL);
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
 
-            // 파일명 설정 (앞에 원하는 이름을 넣으세요)
-            const fileName = `Life4Cut_${dateStr}.png`;
+        // 3. 파일명 생성 (요청하신 YYMMDD 형식)
+        const now = new Date();
+        const yy = String(now.getFullYear()).slice(-2);
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
+        const hh = String(now.getHours()).padStart(2, '0');
+        const min = String(now.getMinutes()).padStart(2, '0');
+        const fileName = `인생네컷_${yy}${mm}${dd}_${hh}${min}.png`;
 
-            const link = document.createElement('a');
-            link.href = finalImageDataURL;
-            link.download = fileName;
-
-            document.body.appendChild(link);
-            link.click();
+        // 4. 가상 링크 생성 및 다운로드 실행
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        
+        // 5. 정리
+        setTimeout(() => {
             document.body.removeChild(link);
-        }
+            window.URL.revokeObjectURL(url); // 메모리 해제
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }, 100);
+
+    } catch (error) {
+        console.error("저장 실패:", error);
+        alert("저장 중 오류가 발생했습니다.");
+        btn.innerText = originalText;
+        btn.disabled = false;
+    }
+}
 
         // 2. [유지] 기존 공유하기 함수 (공유 시트 호출)
         async function downloadAndShare() {
